@@ -1,6 +1,7 @@
 
 import crypto from "crypto";
 import { getAllShortLinks, getShortLinkByShortCode, insertShortLink } from "../services/shortener.services.js";
+import { boolean } from "zod";
 
 
 
@@ -16,8 +17,14 @@ export const getSortenerPage = async (req, res) => {
 
         const links = await getAllShortLinks();
 
+        let isLoggedIn = req.headers.cookie;
 
-        return res.render("index", { links, hosts: req.host });
+        isLoggedIn = Boolean(isLoggedIn?.split(";")?.find((cookie) => cookie.trim().startsWith("isLoggedIn"))?.split("=")[1]);
+
+        console.log("getShortenerPage-isLoggedIn:",  isLoggedIn)
+
+
+        return res.render("index", { links, hosts: req.host, isLoggedIn });
     } catch (error) {
         console.log(error)
         return res.status(500).send("internal server Error")

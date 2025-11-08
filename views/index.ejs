@@ -8,6 +8,11 @@
 </head>
 <body>
   <%- include("./partials/header") %>
+      <% if(isLoggedIn){ %>
+      <h2>You are Logged In</h2>
+      <% } else{ %>
+        <h2>You are logged Out</h2>
+        <% } %>
 
   <section class="hero">
     <div class="container">
