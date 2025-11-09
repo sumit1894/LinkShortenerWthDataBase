@@ -1,4 +1,5 @@
-import { createUser, getUserByEmail, getUserByEmailPaassword } from "../services/auth.services.js";
+
+import { comparePassword, createUser, getUserByEmail, hashPassword } from "../services/auth.services.js";
 
 
 export const getRegisterPage = (req, res) => {
@@ -12,7 +13,9 @@ export const postRegister = async (req, res) => {
     const userExists = await getUserByEmail(email);
     if (userExists) return res.redirect("/register")
 
-    const [user] = await createUser({ name, email, password });
+    const hashedPassword=await hashPassword(password);
+
+    const [user] = await createUser({ name, email, password:hashedPassword });
     console.log(user);
 
 
@@ -33,7 +36,12 @@ export const postLogin = async (req, res) => {
     const user = await getUserByEmail(email);
     if (!user) return res.redirect("/login")
 
-    if (user.password !== password) return res.redirect("/login")
+    //todo bcrypt.compare(plaintext,hashedPassword)
+    const isPasswordValid=await comparePassword(password,user.password);
+
+    // if (user.password !== password) return res.redirect("/login")
+    if (!isPasswordValid) return res.redirect("/login")
+
 
     res.cookie("isLoggedIn", true);
     res.redirect("/")

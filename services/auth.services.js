@@ -1,6 +1,7 @@
 import { eq,and } from "drizzle-orm"
 import { db } from "../config/db.js"
 import { usersTable } from "../drizzle/schema.js"
+import bcrypt from "bcrypt"
 
 
 
@@ -28,16 +29,11 @@ export const getUserByEmailPaassword = async ({ email, password }) => {
     return user;
 }
 
+export const hashPassword=async(password)=>{
+    return await bcrypt.hash(password,10);
+}
 
-// export const getUserByEmailPaassword = async ({ email, password }) => {
-//     const [user] = await db
-//         .select()
-//         .from(usersTable)
-//         .where({
-//             email,
-//             password,
-//         })
-//     return user;
-// }
-
+export const comparePassword=async(password,hash)=>{
+    return await bcrypt.compare(password,hash);
+}
 
