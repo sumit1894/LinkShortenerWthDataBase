@@ -22,8 +22,8 @@ export const getSortenerPage = async (req, res) => {
         console.log("getShortenerPage-isLoggedIn:", isLoggedIn)
 
         */
+        
         let isLoggedIn=req.cookies.isLoggedIn;
-
 
         return res.render("index", { links, hosts: req.host, isLoggedIn });
     } catch (error) {
