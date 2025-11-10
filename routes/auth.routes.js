@@ -16,8 +16,9 @@ router
 router
     .route("/login")
     .get(authControllers.getLoginPage)
-    .post(authControllers.postLogin)
+    .post(authControllers.postLogin);
 
-router.route("/me").get(authControllers.getMe)
+router.route("/me").get(authControllers.getMe);
+router.route("/logOut").get(authControllers.LogoutUser);
 
 export const authRoutes = router;

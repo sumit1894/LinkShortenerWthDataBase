@@ -3,13 +3,16 @@ import { comparePassword, createUser, generateToken, getUserByEmail, hashPasswor
 
 
 export const getRegisterPage = (req, res) => {
+    if(req.user) return res.redirect("/")
     return res.render("auth/register")
 }
 
 export const postRegister = async (req, res) => {
 
+    if(req.user) return res.redirect("/")
+    
     const { name, email, password } = req.body;
-
+    
     const userExists = await getUserByEmail(email);
     if (userExists) return res.redirect("/register")
 
@@ -25,11 +28,12 @@ export const postRegister = async (req, res) => {
 
 
 export const getLoginPage = (req, res) => {
+    if(req.user) return res.redirect("/")
     return res.render("auth/login")
 }
 
 export const postLogin = async (req, res) => {
-
+    if(req.user) return res.redirect("/")
 
     const { email, password } = req.body;
 
@@ -54,6 +58,12 @@ export const postLogin = async (req, res) => {
 export const getMe=(req,res)=>{
     if(!req.user) return res.send("not login in");
     return res.send(`<h1>hey ${req.user.name}- ${req.user.email} </h1>`)
+}
+
+
+export const LogoutUser=(req,res)=>{
+    res.clearCookie("access_token")
+    res.redirect("/login")
 }
 
 
