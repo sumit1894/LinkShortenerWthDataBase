@@ -39,7 +39,6 @@ export const postLogin = async (req, res) => {
     //todo bcrypt.compare(plaintext,hashedPassword)
     const isPasswordValid = await comparePassword(password, user.password);
 
-    // if (user.password !== password) return res.redirect("/login")
     if (!isPasswordValid) return res.redirect("/login");
 
     const token = generateToken({
@@ -49,6 +48,12 @@ export const postLogin = async (req, res) => {
     })
     res.cookie("access_token", token);
     res.redirect("/")
+}
+
+
+export const getMe=(req,res)=>{
+    if(!req.user) return res.send("not login in");
+    return res.send(`<h1>hey ${req.user.name}- ${req.user.email} </h1>`)
 }
 
 

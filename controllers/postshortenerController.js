@@ -11,21 +11,11 @@ import { getAllShortLinks, getShortLinkByShortCode, insertShortLink } from "../s
 export const getSortenerPage = async (req, res) => {
     try {
         //! no need to read because of res.render();
-        // const file = await readFile(path.join("views", "index.html"));
-        // const links = await loadLink()
 
         const links = await getAllShortLinks();
 
-        /*
-        let isLoggedIn = req.headers.cookie;
-        isLoggedIn = Boolean(isLoggedIn?.split(";")?.find((cookie) => cookie.trim().startsWith("isLoggedIn"))?.split("=")[1]);
-        console.log("getShortenerPage-isLoggedIn:", isLoggedIn)
 
-        */
-        
-        let isLoggedIn=req.cookies.isLoggedIn;
-
-        return res.render("index", { links, hosts: req.host, isLoggedIn });
+        return res.render("index", { links, hosts: req.host });
     } catch (error) {
         console.log(error)
         return res.status(500).send("internal server Error")

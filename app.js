@@ -20,6 +20,11 @@ app.set("view engine", "ejs"); //! defining  using engine and which engine
 //! shortenerRouter
 app.use(cookieParser())
 app.use(verifyAuthentication);
+
+app.use((req,res, next)=>{
+    res.locals.user=req.user
+    return next();
+})
 app.use(authRoutes)
 app.use(shortenedRoutes);
 

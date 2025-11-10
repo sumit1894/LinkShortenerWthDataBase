@@ -18,4 +18,6 @@ router
     .get(authControllers.getLoginPage)
     .post(authControllers.postLogin)
 
+router.route("/me").get(authControllers.getMe)
+
 export const authRoutes = router;
