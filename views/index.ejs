@@ -6,6 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>URL Shortener</title>
   <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 </head>
 
 <body>
@@ -19,6 +21,7 @@
           <section class="hero">
             <div class="container">
               <h1>URL Shortener</h1>
+
               <form action="/" method="post" class="url-form">
                 <div class="form-group">
                   <label for="url">Enter URL:</label>
@@ -39,17 +42,36 @@
               </form>
 
               <h2>Shortened URLs</h2>
+
               <ul class="url-list">
-                <% links.map(({url, shortCode})=> { %>
+                <% links.map(({url, shortCode,id})=> { %>
                   <% const truncatedURL=url.length>= 30 ? `${url.slice(0,30)}...` : url %>
+
                     <li>
-                      <a href="/<%= shortCode %>" target="_blank">
-                        <%= hosts %>/<%= shortCode %>
-                      </a>
-                      - <%= truncatedURL %>
+                      <div class="url-info">
+                        <a href="/<%= shortCode %>" target="_blank">
+                          <%= hosts %>/<%= shortCode %>
+                        </a>
+                        - <%= truncatedURL %>
+                      </div>
+
+                      <div class="url-action">
+
+                        <button class="copy-btn" data-url="<%=hosts%>/<%=shortCode%>">
+                          <i class="fa-solid fa-copy"></i>
+                        </button>
+
+                        <button class="copy-btn edit-btn">
+                          <a href="/edit/<%=id%>">
+                            <i class="fa-solid fa-edit"></i>
+                          </a>
+                        </button>
+                        
+                      </div>
                     </li>
                     <% }) %>
               </ul>
+
             </div>
           </section>
 

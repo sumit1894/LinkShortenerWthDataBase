@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>URL Shortener</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+  <%- include("./partials/header") %>
+    <% if(user){ %>
+      <h2>You are Logged In</h2>
+      <% } else{ %>
+        <h2>You are logged Out</h2>
+        <% } %>
+
+          <section class="hero">
+            <div class="container">
+
+              <h1>URL Shortener</h1>
+
+              <form action="/edit/<%= id %>" method="post" class="url-form">
+
+                <div class="form-group">
+                  <label for="url">Enter URL:</label>
+                  <input name="url" id="url" value="<%= url %>" required>
+                </div>
+
+                <div class="form-group">
+                  <label for="shortCode">Enter Short Code:</label>
+                  <input name="shortCode" value="<%= shortCode %>" id="shortCode">
+                </div>
+
+                <% if (errors && errors.length> 0) { %>
+                  <% errors.forEach((error)=> { %>
+                    <p style="color:red;">
+                      <%= error %>
+                    </p>
+                    <% }) %>
+                      <% } %>
+                        <button type="submit">Update</button>
+              </form>
+
+            </div>
+          </section>
+
+          <%- include("./partials/footer") %>
+</body>
+
+</html>

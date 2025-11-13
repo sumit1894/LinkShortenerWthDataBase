@@ -23,6 +23,7 @@ app.set("view engine", "ejs"); //! defining  using engine and which engine
 //! shortenerRouter
 app.use(cookieParser())
 
+// app.use(session({secret:"my-secrit",resave:true, saveUninitialized: false,}))
 app.use(session({secret:"my-secrit",resave:true, saveUninitialized: false,}))
 app.use(flash());
 

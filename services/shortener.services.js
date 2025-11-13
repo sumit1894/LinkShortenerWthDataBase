@@ -22,3 +22,12 @@ export const insertShortLink=async({url,finalShortCode,userId})=>{
         userId
     })
 }
+
+export const findShortLinkById=async(id)=>{
+    const [result]= await db.select().from(shortLinksTable).where(eq(shortLinksTable.id,id))
+    return result;
+}
+
+export const UpdateShortCode=async({id,url,shortCode})=>{
+    return await db.update(shortLinksTable).set({url,shortCode}).where(eq(shortLinksTable.id,id))
+}
