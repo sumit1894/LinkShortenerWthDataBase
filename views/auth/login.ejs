@@ -18,11 +18,11 @@
         <h2>Signup</h2>
         <form action="/login" method="POST">
           <!-- <input type="text" name="username" placeholder="Full Name"> -->
-          <input type="email" name="email" placeholder="Email">
-          <input type="password" name="password" placeholder="Password">
+          <input  name="email" placeholder="Email">
+          <input name="password" placeholder="Password">
           <% if (errors && errors.length> 0) { %>
             <% errors.forEach((error)=> { %>
-              <p>
+              <p style="color:red;">
                 <%= error %>
               </p>
               <% }) %>

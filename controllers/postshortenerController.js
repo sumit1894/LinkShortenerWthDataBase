@@ -1,6 +1,7 @@
 
 import crypto from "crypto";
 import { getAllShortLinks, getShortLinkByShortCode, insertShortLink } from "../services/shortener.services.js";
+import { urlShortenerSchema } from "../validators/auth-validator.js";
 
 
 
@@ -10,12 +11,11 @@ import { getAllShortLinks, getShortLinkByShortCode, insertShortLink } from "../s
 //! function for reading html and Css file
 export const getSortenerPage = async (req, res) => {
     try {
-        //! no need to read because of res.render();
+        if (!req.user) return res.redirect("/login")
 
-        const links = await getAllShortLinks();
+        const links = await getAllShortLinks(req.user.id);
+        return res.render("index", { links, hosts: req.host, errors: req.flash("errors") });
 
-
-        return res.render("index", { links, hosts: req.host });
     } catch (error) {
         console.log(error)
         return res.status(500).send("internal server Error")
@@ -28,7 +28,9 @@ export const getSortenerPage = async (req, res) => {
 
 export const postURLshortener = async (req, res) => {
     try {
-        const { url, shortCode } = req.body;
+        
+        const { url, shortCode } = urlShortenerSchema.parse(req.body);
+        console.log("Parsed values:", url, shortCode);
         const finalShortCode = shortCode || crypto.randomBytes(4).toString("hex");
 
         const link = await getShortLinkByShortCode(finalShortCode);
@@ -38,15 +40,16 @@ export const postURLshortener = async (req, res) => {
         }
 
         //! if not present
-        // link[finalShortCode] = url;
-        // await saveLinks(link)
 
-        await insertShortLink({ url, finalShortCode })
-
+        await insertShortLink({ url, finalShortCode, userId: req.user.id })
         return res.redirect("/");
 
     } catch (error) {
-        console.log(error)
+        if (error.name === 'ZodError') {
+            const errors = error.issues.map(err => err.message);
+            req.flash("errors", errors);
+            return res.redirect("/");
+        }
         return res.status(500).send("internal server Error file")
     }
 };

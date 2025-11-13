@@ -15,18 +15,21 @@
       <div class="signup-box">
         <h2>Register</h2>
         <form action="/register" method="post">
-          <input type="text" name="name" placeholder="Full Name">
-          <input type="email" name="email" placeholder="Email">
-          <input type="password" name="password" placeholder="Password">
+          <input name="name" placeholder="Full Name">
+          <input name="email" placeholder="Email">
+          <input name="password" placeholder="Password">
           <!-- <input type="password" name="confirmPassword" placeholder="Confirm Password"> -->
 
           <% if (errors && errors.length> 0) { %>
             <% errors.forEach((error)=> { %>
-              <p>
+              <p style="color:red;">
                 <%= error %>
               </p>
               <% }) %>
                 <% } %>
+
+
+
 
                   <button type="submit">Create Account</button>
         </form>

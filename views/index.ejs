@@ -1,49 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>URL Shortener</title>
   <link rel="stylesheet" href="/style.css">
 </head>
+
 <body>
   <%- include("./partials/header") %>
-      <% if(user){ %>
+    <% if(user){ %>
       <h2>You are Logged In</h2>
       <% } else{ %>
         <h2>You are logged Out</h2>
         <% } %>
 
-  <section class="hero">
-    <div class="container">
-      <h1>URL Shortener</h1>
-      <form action="/" method="post" class="url-form">
-        <div class="form-group">
-          <label for="url">Enter URL:</label>
-          <input type="url" name="url" id="url" required>
-        </div>
-        <div class="form-group">
-          <label for="shortCode">Enter Short Code:</label>
-          <input type="text" name="shortCode" id="shortCode">
-        </div>
-        <button type="submit">Shorten</button>
-      </form>
+          <section class="hero">
+            <div class="container">
+              <h1>URL Shortener</h1>
+              <form action="/" method="post" class="url-form">
+                <div class="form-group">
+                  <label for="url">Enter URL:</label>
+                  <input name="url" id="url" required>
+                </div>
+                <div class="form-group">
+                  <label for="shortCode">Enter Short Code:</label>
+                  <input name="shortCode" id="shortCode">
+                </div>
+                <% if (errors && errors.length> 0) { %>
+                  <% errors.forEach((error)=> { %>
+                    <p style="color:red;">
+                      <%= error %>
+                    </p>
+                    <% }) %>
+                      <% } %>
+                        <button type="submit">Shorten</button>
+              </form>
 
-      <h2>Shortened URLs</h2>
-      <ul class="url-list">
-        <% links.map(({url, shortCode}) => { %>
-          <% const truncatedURL = url.length >= 30 ? `${url.slice(0,30)}...` : url %>
-          <li>
-            <a href="/<%= shortCode %>" target="_blank">
-              <%= hosts %>/<%= shortCode %>
-            </a>
-            - <%= truncatedURL %>
-          </li>
-        <% }) %>
-      </ul>
-    </div>
-  </section>
+              <h2>Shortened URLs</h2>
+              <ul class="url-list">
+                <% links.map(({url, shortCode})=> { %>
+                  <% const truncatedURL=url.length>= 30 ? `${url.slice(0,30)}...` : url %>
+                    <li>
+                      <a href="/<%= shortCode %>" target="_blank">
+                        <%= hosts %>/<%= shortCode %>
+                      </a>
+                      - <%= truncatedURL %>
+                    </li>
+                    <% }) %>
+              </ul>
+            </div>
+          </section>
 
-  <%- include("./partials/footer") %>
+          <%- include("./partials/footer") %>
 </body>
+
 </html>
