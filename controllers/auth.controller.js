@@ -1,4 +1,5 @@
-import { comparePassword, createUser, generateToken, getUserByEmail, hashPassword } from "../services/auth.services.js";
+import { ACCESS_TOKEN_EXPIRY, REFRESH_TOKEN_EXPIRY } from "../config/constants.js";
+import { comparePassword, createAccessToken, createRefreshToken, createSession, createUser, generateToken, getUserByEmail, hashPassword } from "../services/auth.services.js";
 import { loginUserSchema, regesterUserSchema } from "../validators/auth-validator.js";
 
 
@@ -54,7 +55,6 @@ export const postLogin = async (req, res) => {
         // const { email, password } = req.body;
 
         const data = loginUserSchema.parse(req.body);
-
         const { email, password } = data;
 
         const user = await getUserByEmail(email);
@@ -65,20 +65,40 @@ export const postLogin = async (req, res) => {
 
         //todo bcrypt.compare(plaintext,hashedPassword)
         const isPasswordValid = await comparePassword(password, user.password);
-
         if (!isPasswordValid) {
             req.flash("errors", "Invalid Users or Password")
             return res.redirect("/login");
         }
 
 
-        const token = generateToken({
-            id: user.id,
-            name: user.name,
-            email: user.email
+        //create session
+
+        const session=await createSession(user.id,{
+            ip:req.clientIp,
+            userAgent:req.headers["user-agent"],
+        });
+
+        const accessToken=createAccessToken({
+            id:user.id,
+            name:user.name,
+            email:user.email,
+            sessionId:session.id
         })
-        res.cookie("access_token", token);
+        const RefreshToken=createRefreshToken(session.id)
+
+        const baseConfig={httpOlny:true,secure:true};
+
+        res.cookie("access_token",accessToken,{
+            ...baseConfig,
+            maxAge:ACCESS_TOKEN_EXPIRY,
+        })
+        res.cookie("refresh_token",RefreshToken,{
+            ...baseConfig,
+            maxAge:REFRESH_TOKEN_EXPIRY,
+        })
+
         res.redirect("/")
+
     } catch (error) {
         console.log(error)
         if (error.name === 'ZodError') {
