@@ -1,7 +1,7 @@
 
 import crypto from "crypto";
 import z from "zod"
-import { getAllShortLinks, getShortLinkByShortCode, insertShortLink, findShortLinkById, UpdateShortCode } from "../services/shortener.services.js";
+import { getAllShortLinks, getShortLinkByShortCode, insertShortLink, findShortLinkById, UpdateShortCode, deleteShortCodeById } from "../services/shortener.services.js";
 import { urlShortenerSchema } from "../validators/shortener-validation.js";
 
 
@@ -117,7 +117,7 @@ export const postShortenerEditPage = async (req, res) => {
     if (!req.user) return res.redirect("/login");
 
     const result = z.coerce.number().int().safeParse(req.params.id)
-    
+
     // Add this check back!
     if (!result.success) {
         console.log("postShortenerEditPage - Invalid ID");
@@ -134,13 +134,36 @@ export const postShortenerEditPage = async (req, res) => {
     } catch (error) {
         // Check both error.code and error.cause.code for Drizzle ORM
         const errorCode = error.code || error.cause?.code;
-        
+
         if (errorCode === "ER_DUP_ENTRY") {
             req.flash("errors", "Shortcode already exists, please choose another");
             return res.redirect(`/edit/${id}`);
         }
-        
+
         console.error("Error in postShortenerEditPage:", error);
         return res.status(500).send("Internal server error");
     }
+}
+
+//deleteShortCodeById
+
+export const deleteShortCode = async (req, res) => {
+    try {
+        const result = z.coerce.number().int().safeParse(req.params.id)
+
+        // Add this check back!
+        if (!result.success) {
+            console.log("postShortenerEditPage - Invalid ID");
+            return res.redirect("/404");
+        }
+
+        const id = result.data;
+        await deleteShortCodeById(id);
+        res.redirect("/")
+
+    } catch (error) {
+        console.error("Error in deleteShortCodeById:", error);
+        return res.status(500).send("Internal server error");
+    }
+
 }
