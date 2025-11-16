@@ -1,5 +1,4 @@
-import { email } from "zod";
-import { ACCESS_TOKEN_EXPIRY, REFRESH_TOKEN_EXPIRY } from "../config/constants.js";
+
 import { authentication, clearUserSession, comparePassword, createAccessToken, createRefreshToken, createSession, createUser, findUserById, generateToken, getAllShortLinks, getUserByEmail, hashPassword } from "../services/auth.services.js";
 import { loginUserSchema, regesterUserSchema } from "../validators/auth-validator.js";
 
@@ -119,6 +118,7 @@ export const getProfilePage=async(req,res)=>{
             id:user.id,
             name:user.name,
             email:user.email,
+            isEmailValid:user.isEmailValid,
             createdAt:user.createdAt,
             links:userShortLink,
         },

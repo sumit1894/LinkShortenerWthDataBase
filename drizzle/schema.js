@@ -1,5 +1,5 @@
 
-import { relations } from 'drizzle-orm';
+import { relations, sql } from 'drizzle-orm';
 import { boolean, int, mysqlTable, text, timestamp, varchar } from 'drizzle-orm/mysql-core';
 
 
@@ -11,7 +11,6 @@ export const sessionsTable = mysqlTable("sessions", {
   ip: varchar({ length: 225 }),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
-
 })
 
 export const shortLinksTable = mysqlTable('short_link', {
@@ -23,11 +22,23 @@ export const shortLinksTable = mysqlTable('short_link', {
   userId: int("user_id").notNull().references(() => usersTable.id,{ onDelete: "cascade" })
 });
 
+
+export const verifyEmailTokenTable=mysqlTable("is_email_valid",{
+  id:int().autoincrement().primaryKey(),
+  userId:int("user_id").notNull().references(()=>usersTable.id,{onDelete:"cascade"}),
+  token:varchar({length:8}).notNull(),
+  expiresAt: timestamp("expires_at").default(sql`(CURRENT_TIMESTAMP + INTERVAL 1 DAY)`).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+})
+
+
+
 export const usersTable = mysqlTable('users', {
   id: int().autoincrement().primaryKey(),
   name: varchar({ length: 255 }).notNull(),
   email: varchar({ length: 255 }).notNull().unique(),
   password: varchar({ length: 255 }).notNull(),
+  isEmailValid:boolean("is_email_valid").default(false).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
 });

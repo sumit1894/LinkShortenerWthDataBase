@@ -14,10 +14,10 @@ export const getUserByEmail = async (email) => {
     ))
     return user;
 };
+
 export const createUser = async ({ name, email, password }) => {
     return await db.insert(usersTable).values({ name, email, password }).$returningId();
 };
-
 
 export const getUserByEmailPaassword = async ({ email, password }) => {
     const [user] = await db
@@ -104,6 +104,7 @@ export const refreshTokens = async (refreshToken) => {
             id: user.id,
             name: user.name,
             email: user.email,
+            isEmailValid:user.isEmailValid,
             sessionId: currentSession.id,
         };
 
@@ -139,6 +140,7 @@ export const authentication = async (req, res, user, name, email) => {
         id: user.id,
         name: user.name || name,
         email: user.email || email,
+        isEmailValid:false,
         sessionId: session.id
     })
     const RefreshToken = createRefreshToken(session.id)
@@ -159,4 +161,5 @@ export const authentication = async (req, res, user, name, email) => {
 export const getAllShortLinks=async(userId)=>{
     return db.select().from(shortLinksTable).where(eq(shortLinksTable.userId,userId));
 }
+
 

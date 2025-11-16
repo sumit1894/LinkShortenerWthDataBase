@@ -14,74 +14,94 @@
     <!-- HEADER -->
     <%- include("../partials/header") %>
 
-    <!-- PROFILE SECTION -->
-    <div class="profile-container">
-        <div class="profile-box">
-            <h1>Your Profile</h1>
+        <!-- PROFILE SECTION -->
+        <div class="profile-container">
+            <div class="profile-box">
+                <h1>Your Profile</h1>
 
-            <div class="status-badge">
-                <i class="fas fa-check-circle"></i>
-                <% if (user) { %>
-                    <span>You are Logged In</span>
-                <% } else { %>
-                    <span>You are Logged Out</span>
-                <% } %>
-            </div>
-
-            <div class="profile-info">
-                <div class="profile-avatar">
-                    <span><%= user.name.charAt(0).toUpperCase() %></span>
+                <div class="status-badge">
+                    <i class="fas fa-check-circle"></i>
+                    <% if (user) { %>
+                        <span>You are Logged In</span>
+                        <% } else { %>
+                            <span>You are Logged Out</span>
+                            <% } %>
                 </div>
 
-                <div class="profile-name"><%= user.name %></div>
+                <div class="profile-info">
+                    <div class="profile-avatar">
+                        <span>
+                            <%= user.name.charAt(0).toUpperCase() %>
+                        </span>
+                    </div>
 
-                <div class="profile-detail">
-                    <i class="fas fa-envelope"></i>
-                    <span><%= user.email %></span>
+                    <div class="profile-name">
+                        <%= user.name %>
+                    </div>
+
+                    <div class="profile-detail">
+                        <i class="fas fa-envelope"></i>
+                        <span>
+                            <%= user.email %>
+                        </span>
+                    </div>
+
+                    <div class="profile-detail">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>
+                            Member since
+                            <%= new Date(user.createdAt).toLocaleDateString() %>
+                        </span>
+                    </div>
                 </div>
 
-                <div class="profile-detail">
-                    <i class="fas fa-calendar-alt"></i>
-                    <span>
-                        Member since 
-                        <%= new Date(user.createdAt).toLocaleDateString() %>
-                    </span>
-                </div>
-            </div>
+                <div class="profile-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">
+                            <%= user.links ? user.links.length : 0 %>
+                        </span>
+                        <span>Links Created</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">
+                            <%= user.totalClicks || 0 %>
+                        </span>
+                        <span>Total clicks</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">
+                            <%= user.lastActive ? new Date(user.lastActive).toLocaleDateString() : "Today" %>
+                        </span>
+                        <span>Last Active</span>
+                    </div>
 
-            <div class="profile-stats">
-                <div class="stat-item">
-                    <span class="stat-label"><%= user.links ? user.links.length : 0 %></span>
-                    <span>Links Created</span>
+                    <% if(user.isEmailValid){ %>
+                        <span>Vefified</span>
+                        <% } else{ %>
+                            <span> Not Verified</span>
+                            }
+                    <a href="/resend-verification">
+                        Verify Now
+                    </a>
                 </div>
-                <div class="stat-item">
-                    <span class="stat-label"><%= user.totalClicks || 0 %></span>
-                    <span>Total clicks</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-label">
-                        <%= user.lastActive ? new Date(user.lastActive).toLocaleDateString() : "Today" %>
-                    </span>
-                    <span>Last Active</span>
-                </div>
-            </div>
 
-            <div class="profile-actions">
-                <a href="/edit-profile">
-                    <i class="fas fa-edit"></i> Edit Profile
-                </a>
-                <a href="/change-password">
-                    <i class="fas fa-key"></i> Change Password
-                </a>
-                <a href="/logout" class="logout-link">
-                    <i class="fas fa-sign-out-alt"></i> Logout
-                </a>
+                <div class="profile-actions">
+                    <a href="/edit-profile">
+                        <i class="fas fa-edit"></i> Edit Profile
+                    </a>
+                    <a href="/change-password">
+                        <i class="fas fa-key"></i> Change Password
+                    </a>
+                    <a href="/logout" class="logout-link">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </a>
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- FOOTER -->
-    <%- include("../partials/footer") %>
+        <!-- FOOTER -->
+        <%- include("../partials/footer") %>
 
 </body>
+
 </html>
