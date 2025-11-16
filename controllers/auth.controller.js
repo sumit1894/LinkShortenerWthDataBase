@@ -1,5 +1,6 @@
+import { email } from "zod";
 import { ACCESS_TOKEN_EXPIRY, REFRESH_TOKEN_EXPIRY } from "../config/constants.js";
-import { comparePassword, createAccessToken, createRefreshToken, createSession, createUser, generateToken, getUserByEmail, hashPassword } from "../services/auth.services.js";
+import { authentication, clearUserSession, comparePassword, createAccessToken, createRefreshToken, createSession, createUser, findUserById, generateToken, getAllShortLinks, getUserByEmail, hashPassword } from "../services/auth.services.js";
 import { loginUserSchema, regesterUserSchema } from "../validators/auth-validator.js";
 
 
@@ -28,7 +29,9 @@ export const postRegister = async (req, res) => {
         const [user] = await createUser({ name, email, password: hashedPassword });
         console.log(user);
 
-        res.redirect("/login")
+        await authentication({req,res,name,email,user})
+
+        res.redirect("/")
 
     } catch (error) {
         // Handle Zod validation errors
@@ -73,29 +76,7 @@ export const postLogin = async (req, res) => {
 
         //create session
 
-        const session=await createSession(user.id,{
-            ip:req.clientIp,
-            userAgent:req.headers["user-agent"],
-        });
-
-        const accessToken=createAccessToken({
-            id:user.id,
-            name:user.name,
-            email:user.email,
-            sessionId:session.id
-        })
-        const RefreshToken=createRefreshToken(session.id)
-
-        const baseConfig={httpOlny:true,secure:true};
-
-        res.cookie("access_token",accessToken,{
-            ...baseConfig,
-            maxAge:ACCESS_TOKEN_EXPIRY,
-        })
-        res.cookie("refresh_token",RefreshToken,{
-            ...baseConfig,
-            maxAge:REFRESH_TOKEN_EXPIRY,
-        })
+        await authentication(req,res,user)
 
         res.redirect("/")
 
@@ -117,10 +98,33 @@ export const getMe = (req, res) => {
     return res.send(`<h1>hey ${req.user.name}- ${req.user.email} </h1>`)
 }
 
+export const LogoutUser = async (req, res) => {
 
-export const LogoutUser = (req, res) => {
+    await clearUserSession(req.user.sessionId)
     res.clearCookie("access_token")
+    res.clearCookie("refresh_token")
     res.redirect("/login")
+}
+
+export const getProfilePage=async(req,res)=>{
+    if(!req.user) return res.send("not logged in");
+
+    const user=await findUserById(req.user.id);
+    if(!user) return res.redirect("/login");
+
+    const userShortLink=await getAllShortLinks(user.id);
+
+    return res.render("auth/profile",{
+        user:{
+            id:user.id,
+            name:user.name,
+            email:user.email,
+            createdAt:user.createdAt,
+            links:userShortLink,
+        },
+    });
+
+
 }
 
 

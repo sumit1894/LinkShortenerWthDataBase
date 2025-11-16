@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Profile</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <%- include("../partials/header") %>
+
+    <!-- PROFILE SECTION -->
+    <div class="profile-container">
+        <div class="profile-box">
+            <h1>Your Profile</h1>
+
+            <div class="status-badge">
+                <i class="fas fa-check-circle"></i>
+                <% if (user) { %>
+                    <span>You are Logged In</span>
+                <% } else { %>
+                    <span>You are Logged Out</span>
+                <% } %>
+            </div>
+
+            <div class="profile-info">
+                <div class="profile-avatar">
+                    <span><%= user.name.charAt(0).toUpperCase() %></span>
+                </div>
+
+                <div class="profile-name"><%= user.name %></div>
+
+                <div class="profile-detail">
+                    <i class="fas fa-envelope"></i>
+                    <span><%= user.email %></span>
+                </div>
+
+                <div class="profile-detail">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>
+                        Member since 
+                        <%= new Date(user.createdAt).toLocaleDateString() %>
+                    </span>
+                </div>
+            </div>
+
+            <div class="profile-stats">
+                <div class="stat-item">
+                    <span class="stat-label"><%= user.links ? user.links.length : 0 %></span>
+                    <span>Links Created</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label"><%= user.totalClicks || 0 %></span>
+                    <span>Total clicks</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">
+                        <%= user.lastActive ? new Date(user.lastActive).toLocaleDateString() : "Today" %>
+                    </span>
+                    <span>Last Active</span>
+                </div>
+            </div>
+
+            <div class="profile-actions">
+                <a href="/edit-profile">
+                    <i class="fas fa-edit"></i> Edit Profile
+                </a>
+                <a href="/change-password">
+                    <i class="fas fa-key"></i> Change Password
+                </a>
+                <a href="/logout" class="logout-link">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <%- include("../partials/footer") %>
+
+</body>
+</html>
