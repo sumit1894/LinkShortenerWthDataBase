@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Your Email</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <%- include("../partials/header") %>
+
+
+        <!-- EMAIL VERIFICATION SECTION -->
+        <div class="verification-container">
+            <div class="verification-box">
+                <h1>Verify Your Email</h1>
+
+                <div class="status-badge">
+                    <i class="fas fa-check-circle"></i>
+                    <% if(user){ %>
+                        <span>You are Logged in</span>
+                        <% } else{ %>
+                            <span> You are not Logged in</span>
+                            <% } %>
+                </div>
+
+                <div class="email-info">
+                    <p><strong>Email:</strong>
+                        <%= email %>
+                    </p>
+                </div>
+
+                <p class="info-text">
+                    Your email has not been verified yet. Please verify your email by entering the 8-digit code or
+                    request a new verification link.
+                </p>
+
+                <form method="POST" action="/resend-verification-link">
+                    <button type="submit" class="verify-btn">Resend verification Link</button>
+                </form>
+                <div class="verification-form">
+
+                    <form method="get" action="/verify-email-token">
+                        <div class="form-group">
+                            <label for="token">Enter 8-Digit Verification Code:</label>
+                            <input type="text" name="token" placeholder="Enter Code" maxlength="8" pattern="[0-9]{8}"
+                                required>
+                        </div>
+
+                        <input type="hidden" value="<%= email %>" name="email">
+                        <button type="submit" class="verify-btn">Verify Code</button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+
+        <%- include("../partials/footer") %>
+
+
+</body>
+
+</html>

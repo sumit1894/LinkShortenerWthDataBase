@@ -130,8 +130,9 @@ export const clearUserSession = async (sessionId) => {
 }
 
 
-export const authentication = async (req, res, user, name, email) => {
-    const session = await createSession(user.id, {
+export const authentication = async ({req, res, user, name, email}) => {
+    
+    const session = await createSession(user.id,{
         ip: req.clientIp,
         userAgent: req.headers["user-agent"],
     });
@@ -141,7 +142,7 @@ export const authentication = async (req, res, user, name, email) => {
         name: user.name || name,
         email: user.email || email,
         isEmailValid:false,
-        sessionId: session.id
+        sessionId: session.id,
     })
     const RefreshToken = createRefreshToken(session.id)
 

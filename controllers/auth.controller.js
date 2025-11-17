@@ -1,5 +1,5 @@
 
-import { authentication, clearUserSession, comparePassword, createAccessToken, createRefreshToken, createSession, createUser, findUserById, generateToken, getAllShortLinks, getUserByEmail, hashPassword } from "../services/auth.services.js";
+import { authentication, clearUserSession, comparePassword, createUser, findUserById, getAllShortLinks, getUserByEmail, hashPassword } from "../services/auth.services.js";
 import { loginUserSchema, regesterUserSchema } from "../validators/auth-validator.js";
 
 
@@ -28,7 +28,7 @@ export const postRegister = async (req, res) => {
         const [user] = await createUser({ name, email, password: hashedPassword });
         console.log(user);
 
-        await authentication({req,res,name,email,user})
+        await authentication ({req,res,user,name,email})
 
         res.redirect("/")
 
@@ -75,7 +75,7 @@ export const postLogin = async (req, res) => {
 
         //create session
 
-        await authentication(req,res,user)
+        await authentication({req,res,user})
 
         res.redirect("/")
 
@@ -127,7 +127,13 @@ export const getProfilePage=async(req,res)=>{
 
 }
 
+export const getVerifyEmailPage=async(req,res)=>{
+    if(!req.user || req.user.isEmailValid) return res.redirect("/");
 
+    return res.render("auth/verify-email",{
+        email:req.user.email,
+    });
+}
 
 
 
