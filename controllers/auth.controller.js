@@ -1,5 +1,6 @@
 
-import { authentication, clearUserSession, comparePassword, createUser, findUserById, getAllShortLinks, getUserByEmail, hashPassword } from "../services/auth.services.js";
+import { sendEmail } from "../lib/nodemailer.js";
+import { authentication, clearUserSession, comparePassword, createUser, createVerifyEmailLink, findUserById, generateRandomToken, getAllShortLinks, getUserByEmail, hashPassword, insertVerifyEmailToken } from "../services/auth.services.js";
 import { loginUserSchema, regesterUserSchema } from "../validators/auth-validator.js";
 
 
@@ -28,7 +29,7 @@ export const postRegister = async (req, res) => {
         const [user] = await createUser({ name, email, password: hashedPassword });
         console.log(user);
 
-        await authentication ({req,res,user,name,email})
+        await authentication({ req, res, user, name, email })
 
         res.redirect("/")
 
@@ -75,7 +76,7 @@ export const postLogin = async (req, res) => {
 
         //create session
 
-        await authentication({req,res,user})
+        await authentication({ req, res, user })
 
         res.redirect("/")
 
@@ -105,34 +106,65 @@ export const LogoutUser = async (req, res) => {
     res.redirect("/login")
 }
 
-export const getProfilePage=async(req,res)=>{
-    if(!req.user) return res.send("not logged in");
+export const getProfilePage = async (req, res) => {
+    if (!req.user) return res.send("not logged in");
 
-    const user=await findUserById(req.user.id);
-    if(!user) return res.redirect("/login");
+    const user = await findUserById(req.user.id);
+    if (!user) return res.redirect("/login");
 
-    const userShortLink=await getAllShortLinks(user.id);
+    const userShortLink = await getAllShortLinks(user.id);
 
-    return res.render("auth/profile",{
-        user:{
-            id:user.id,
-            name:user.name,
-            email:user.email,
-            isEmailValid:user.isEmailValid,
-            createdAt:user.createdAt,
-            links:userShortLink,
+    return res.render("auth/profile", {
+        user: {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            isEmailValid: user.isEmailValid,
+            createdAt: user.createdAt,
+            links: userShortLink,
         },
     });
 
 
 }
 
-export const getVerifyEmailPage=async(req,res)=>{
-    if(!req.user || req.user.isEmailValid) return res.redirect("/");
+export const getVerifyEmailPage = async (req, res) => {
 
-    return res.render("auth/verify-email",{
-        email:req.user.email,
+    if (!req.user) return res.render("/");
+    const user = await findUserById(req.user.id);
+    if (!user || user.isEmailValid) return res.redirect("/");
+
+    return res.render("auth/verify-email", {
+        email: req.user.email,
     });
+}
+
+export const resendVerificationLink = async (req, res) => {
+
+    if (!req.user) return res.render("/");
+    const user = await findUserById(req.user.id);
+    if (!user || user.isEmailValid) return res.redirect("/");
+
+    const randomToken=generateRandomToken();
+
+    await insertVerifyEmailToken({userId:req.user.id, token:randomToken})
+
+    const verifyEmailLink=await createVerifyEmailLink({
+        email:req.user.email,
+        token:randomToken,
+    })
+
+    sendEmail({
+        to:req.user.email,
+        subject:"Verify your email",
+        html:`
+            <h1>Click the link below to verify your email</h1>
+            <p>you can use this Token: <code>${randomToken}</code></p>
+            <a href= "${verifyEmailLink}">Verify Email</a>
+        `,
+    }).catch(console.error);
+
+        res.redirect('/verify-email')
 }
 
 

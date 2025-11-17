@@ -1,10 +1,11 @@
 import { ACCESS_TOKEN_EXPIRY, MILLISECONDS_PER_SECOND, REFRESH_TOKEN_EXPIRY } from "../config/constants.js";
-import { eq, and } from "drizzle-orm"
+import { eq, and, lt, sql } from "drizzle-orm"
 import { db } from "../config/db.js"
-import { sessionsTable, shortLinksTable, usersTable } from "../drizzle/schema.js"
+import { sessionsTable, shortLinksTable, usersTable, verifyEmailTokenTable } from "../drizzle/schema.js"
 
-import argon2 from "argon2"
+import argon2 from "argon2";
 import jwt from "jsonwebtoken";
+import crypto from "crypto";
 
 
 
@@ -104,7 +105,7 @@ export const refreshTokens = async (refreshToken) => {
             id: user.id,
             name: user.name,
             email: user.email,
-            isEmailValid:user.isEmailValid,
+            isEmailValid: user.isEmailValid,
             sessionId: currentSession.id,
         };
 
@@ -130,9 +131,9 @@ export const clearUserSession = async (sessionId) => {
 }
 
 
-export const authentication = async ({req, res, user, name, email}) => {
-    
-    const session = await createSession(user.id,{
+export const authentication = async ({ req, res, user, name, email }) => {
+
+    const session = await createSession(user.id, {
         ip: req.clientIp,
         userAgent: req.headers["user-agent"],
     });
@@ -141,7 +142,7 @@ export const authentication = async ({req, res, user, name, email}) => {
         id: user.id,
         name: user.name || name,
         email: user.email || email,
-        isEmailValid:false,
+        isEmailValid: false,
         sessionId: session.id,
     })
     const RefreshToken = createRefreshToken(session.id)
@@ -159,8 +160,53 @@ export const authentication = async ({req, res, user, name, email}) => {
 }
 
 
-export const getAllShortLinks=async(userId)=>{
-    return db.select().from(shortLinksTable).where(eq(shortLinksTable.userId,userId));
+export const getAllShortLinks = async (userId) => {
+    return db.select().from(shortLinksTable).where(eq(shortLinksTable.userId, userId));
 }
 
+//! generateRandomToken
+
+export const generateRandomToken = (digit = 8) => {
+    const min = 10 ** (digit - 1); //10000000
+    const max = 10 ** (digit);  //100000000
+
+    return crypto.randomInt(min, max).toString()
+
+}
+
+//! insertVerifyEmailToken
+export const insertVerifyEmailToken = async ({ userId, token }) => {
+
+    return db.transaction(async (tx) => {
+        try {
+            await tx.delete(verifyEmailTokenTable).where(lt(verifyEmailTokenTable.expiresAt, sql`CURRENT_TIMESTAMP`))
+            //* Delete any existing  for the specific user
+            await tx.delete(verifyEmailTokenTable).where(eq(verifyEmailTokenTable.userId,userId));
+
+            await tx.insert(verifyEmailTokenTable).values({ userId, token });
+        } catch (error) {
+            console.error("Failed to insert Verification token:",error);
+            throw new Error("Unable to create Verification token");
+        }
+    })
+
+
+
+}
+
+
+//! createVerifyEmailLink
+export const createVerifyEmailLink = async ({ email, token }) => {
+
+    // const uriEncodedEmail = encodeURIComponent(email);
+    // return `${process.env.FRONTEND_URL}/verify-email-token?token=${token}&email=${uriEncodedEmail}`;
+
+
+    const url=new URL(`${process.env.FRONTEND_URL}/verify-email-token`);
+
+    url.searchParams.append("token",token);
+    url.searchParams.append("email",email);
+
+    return url.toString();
+}
 
