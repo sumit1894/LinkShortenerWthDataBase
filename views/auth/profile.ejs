@@ -75,14 +75,15 @@
                         <span>Last Active</span>
                     </div>
 
-                    <% if(user.isEmailValid){ %>
-                        <span>Vefified</span>
-                        <% } else{ %>
-                            <span> Not Verified</span>
+                    <% if (user.isEmailValid) { %>
+                        <span style="color: green; font-weight: 600;">Verified</span>
+                        <% } else { %>
+                            <span style="color: red; font-weight: 600;">Not Verified</span>
                             <% } %>
-                    <a href="/verify-email">
-                        Verify Now
-                    </a>
+
+                                <a href="/verify-email">
+                                    Verify Now
+                                </a>
                 </div>
 
                 <div class="profile-actions">

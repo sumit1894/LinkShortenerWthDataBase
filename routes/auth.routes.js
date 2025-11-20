@@ -26,6 +26,8 @@ router.route("/verify-email").get(authControllers.getVerifyEmailPage)
 
 router.route("/resend-verification-link").post(authControllers.resendVerificationLink)
 
+router.route("/verify-email-token").get(authControllers.verifyEmailToken);
+
 router.route("/logOut").get(authControllers.LogoutUser);
 
 export const authRoutes = router;
