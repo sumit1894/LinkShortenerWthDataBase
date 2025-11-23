@@ -2,10 +2,15 @@ import { ACCESS_TOKEN_EXPIRY, MILLISECONDS_PER_SECOND, REFRESH_TOKEN_EXPIRY } fr
 import { eq, and, lt, sql, gte } from "drizzle-orm"
 import { db } from "../config/db.js"
 import { sessionsTable, shortLinksTable, usersTable, verifyEmailTokenTable } from "../drizzle/schema.js"
+import { sendEmail } from "../lib/send-email.js"
 
 import argon2 from "argon2";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
+import path from "path";
+import fs from "fs/promises";
+import mjml2html from "mjml";
+import ejs from "ejs";
 
 
 
@@ -144,19 +149,22 @@ export const authentication = async ({ req, res, user, name, email }) => {
         email: user.email || email,
         isEmailValid: false,
         sessionId: session.id,
-    })
-    const RefreshToken = createRefreshToken(session.id)
+    });
 
+    const RefreshToken = createRefreshToken(session.id)
     const baseConfig = { httpOnly: true, secure: true };
 
     res.cookie("access_token", accessToken, {
         ...baseConfig,
         maxAge: ACCESS_TOKEN_EXPIRY,
     })
+
     res.cookie("refresh_token", RefreshToken, {
         ...baseConfig,
         maxAge: REFRESH_TOKEN_EXPIRY,
     })
+
+
 }
 
 
@@ -212,6 +220,7 @@ export const createVerifyEmailLink = async ({ email, token }) => {
 
 
 //! findVerificationEmailToken
+/*
 export const findVerificationEmailToken = async ({ token, email }) => {
     const tokenData = await db
         .select({
@@ -239,6 +248,7 @@ export const findVerificationEmailToken = async ({ token, email }) => {
         return null;
     }
 
+
     return {
         userId: userData[0].userId,
         email: userData[0].email,
@@ -246,6 +256,26 @@ export const findVerificationEmailToken = async ({ token, email }) => {
         expiresAt: tokenData[0].expiresAt,
     }
 
+}
+*/
+
+//! findVerificationEmailToken + inner join
+
+export const findVerificationEmailToken = async ({ token, email }) => {
+    return db
+        .select({
+            userId: verifyEmailTokenTable.userId,
+            email: usersTable.email,
+            token: verifyEmailTokenTable.token,
+            expiresAt: verifyEmailTokenTable.expiresAt,
+        })
+        .from(verifyEmailTokenTable)
+        .where(
+            and(
+                eq(verifyEmailTokenTable.token, token),
+                eq(usersTable.email, email),
+                gte(verifyEmailTokenTable.expiresAt, sql`CURRENT_TIMESTAMP`))
+        ).innerJoin(usersTable, eq(verifyEmailTokenTable.userId, usersTable.id))
 }
 
 //!verifyUserEmailAndUpdate
@@ -259,6 +289,59 @@ export const verifyUserEmailAndUpdate = async (email) => {
 export const clearVerifyEmailToken = async (userId) => {
     return await db.delete(verifyEmailTokenTable).where(eq(verifyEmailTokenTable.userId, userId));
 }
+
+//! sendNewVerifyEmailLink
+
+export const sendNewVerifyEmailLink = async ({ userId, email }) => {
+    const randomToken = generateRandomToken();
+
+    await insertVerifyEmailToken({ userId, token: randomToken })
+
+    const verifyEmailLink = await createVerifyEmailLink({
+        email,
+        token: randomToken,
+    })
+
+    //* path define
+    const mjmlTmeplate = await fs.readFile(
+        path.join(import.meta.dirname, "..", "emails", "verify-email.mjml"), "utf8"
+    );
+
+    //* replace the placeholder with actual value
+    const filledTemplate = ejs.render(mjmlTmeplate, { code: randomToken, link: verifyEmailLink, })
+
+    //* convert mjml into html
+    const htmlOutput = mjml2html(filledTemplate).html;
+
+
+    sendEmail({
+        to: email,
+        subject: "Verify your email",
+        html: htmlOutput,
+    }).catch(console.error);
+}
+
+//! updateUserByName
+
+export const updateUserByName = async ({ userId, name }) => {
+    return await db.update(usersTable).set({ name }).where(eq(usersTable.id, userId));
+}
+
+//! updateUserPassword
+
+export const updateUserPassword=async({userId,newPassword})=>{
+    const newHashPassword=await hashPassword(newPassword);
+
+    return await db.update(usersTable).set({password:newHashPassword}).where(eq(usersTable.id,userId));
+}
+
+
+
+
+
+
+
+
 
 
 

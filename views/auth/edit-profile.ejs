@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Add Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <%- include("../partials/header") %>
+
+    <div class="container">
+        <div class="status-badge">
+            <i class="fas fa-check-circle"></i>
+            <% if (user) { %>
+                <span>You are Logged In</span>
+            <% } else { %>
+                <span>You are Logged Out</span>
+            <% } %>
+        </div>
+
+        <div class="form-content">
+            <h1>Edit Your Profile</h1>
+            <div class="underline"></div>
+
+            <form action="/edit-profile" method="POST">
+                <div class="form-group">
+                    <label>
+                        <span class="icon">👤</span>
+                    </label>
+                    <input type="text" name="name" value="<%= name %>" placeholder="Enter your name" required>
+                </div>
+
+                <% if (errors && errors.length > 0) { %>
+                    <% errors.forEach((error) => { %>
+                        <div class="error-message">
+                            <%= error %>
+                        </div>
+                    <% }) %>
+                <% } %>
+
+                <div>
+                    <input type="submit" name="shorten" id="shorten" class="form-submit" value="Save Changes">
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <%- include("../partials/footer") %>
+</body>
+
+</html>

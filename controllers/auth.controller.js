@@ -1,13 +1,14 @@
 
-import { sendEmail } from "../lib/nodemailer.js";
-import { authentication, clearUserSession, clearVerifyEmailToken, comparePassword, createUser, createVerifyEmailLink, findUserById, findVerificationEmailToken, generateRandomToken, getAllShortLinks, getUserByEmail, hashPassword, insertVerifyEmailToken, verifyUserEmailAndUpdate } from "../services/auth.services.js";
-import { loginUserSchema, regesterUserSchema, verifyEmailSchema } from "../validators/auth-validator.js";
+import { authentication, clearUserSession, clearVerifyEmailToken, comparePassword, createUser, createVerifyEmailLink, findUserById, findVerificationEmailToken, generateRandomToken, getAllShortLinks, getUserByEmail, hashPassword, insertVerifyEmailToken, sendNewVerifyEmailLink, updateUserByName, updateUserPassword, verifyUserEmailAndUpdate } from "../services/auth.services.js";
+import { loginUserSchema, regesterUserSchema, verifyEmailSchema, verifyPasswordSchema, verifyUserSchema } from "../validators/auth-validator.js";
+
 
 
 export const getRegisterPage = (req, res) => {
     if (req.user) return res.redirect("/")
     return res.render("auth/register", { errors: req.flash("errors") })
 }
+
 
 export const postRegister = async (req, res) => {
     if (req.user) return res.redirect("/")
@@ -29,7 +30,8 @@ export const postRegister = async (req, res) => {
         const [user] = await createUser({ name, email, password: hashedPassword });
         console.log(user);
 
-        await authentication({ req, res, user, name, email })
+        await authentication({ req, res, user, name, email });
+        await sendNewVerifyEmailLink({ userId: user.id, email });
 
         res.redirect("/")
 
@@ -73,12 +75,9 @@ export const postLogin = async (req, res) => {
             return res.redirect("/login");
         }
 
-
         //create session
-
         await authentication({ req, res, user })
-
-        res.redirect("/")
+        // res.redirect("/")
 
     } catch (error) {
         console.log(error)
@@ -89,7 +88,6 @@ export const postLogin = async (req, res) => {
         }
         throw error;
     }
-
 
 }
 
@@ -128,6 +126,7 @@ export const getProfilePage = async (req, res) => {
 
 }
 
+//! getVerifyEmailPage
 export const getVerifyEmailPage = async (req, res) => {
 
     if (!req.user) return res.render("/");
@@ -145,24 +144,7 @@ export const resendVerificationLink = async (req, res) => {
     const user = await findUserById(req.user.id);
     if (!user || user.isEmailValid) return res.redirect("/");
 
-    const randomToken = generateRandomToken();
-
-    await insertVerifyEmailToken({ userId: req.user.id, token: randomToken })
-
-    const verifyEmailLink = await createVerifyEmailLink({
-        email: req.user.email,
-        token: randomToken,
-    })
-
-    sendEmail({
-        to: req.user.email,
-        subject: "Verify your email",
-        html: `
-            <h1>Click the link below to verify your email</h1>
-            <p>you can use this Token: <code>${randomToken}</code></p>
-            <a href= "${verifyEmailLink}">Verify Email</a>
-        `,
-    }).catch(console.error);
+    await sendNewVerifyEmailLink({ userId: req.user.id, email: req.user.email })
 
     res.redirect('/verify-email')
 }
@@ -174,11 +156,11 @@ export const verifyEmailToken = async (req, res) => {
         // const data = verifyEmailSchema.parse(req.body);
         const data = verifyEmailSchema.parse(req.query);
         // const { token,email} = data;
+        console.log("Verification Email Token", data.token, "and", data.email);
 
 
-        const token= await findVerificationEmailToken(data); 
-        console.log("Verification Email Token",token);
-        if(!token) res.send("Verification link inValid or expired!");
+        const [token] = await findVerificationEmailToken(data);
+        if (!token) res.send("Verification link inValid or expired!");
 
         await verifyUserEmailAndUpdate(token.email);
 
@@ -198,5 +180,109 @@ export const verifyEmailToken = async (req, res) => {
         throw error;
     }
 }
+
+//!getEditProfilePage
+
+export const getEditProfilePage = async (req, res) => {
+    if (!req.user) return res.redirect("/");
+
+    const user = await findUserById(req.user.id);
+    if (!user) return res.status(404).send("user not found");
+
+    return res.render("auth/edit-profile", {
+        name: user.name,
+        errors: req.flash("errors"),
+    })
+
+
+}
+
+//! postEditProfilePage
+
+export const postEditProfilePage = async (req, res) => {
+    if (!req.user) return res.redirect("/");
+
+    try {
+        // Parse and validate data
+        const data = verifyUserSchema.safeParse(req.body);
+
+        // Check if validation failed
+        if (!data.success) {
+            const errors = data.error.issues.map(err => err.message);
+            req.flash("errors", errors);
+            return res.redirect("/edit-profile");
+        }
+
+        // Update user with validated data
+        await updateUserByName({ userId: req.user.id, name: data.data.name });
+
+        // Success message
+        req.flash("success", "Profile updated successfully!");
+        return res.redirect("/profile");
+
+    } catch (error) {
+        console.error("Error updating profile:", error);
+        req.flash("errors", ["Something went wrong. Please try again."]);
+        return res.redirect("/edit-profile");
+    }
+}
+
+//! getChangePassword
+
+export const getChangePassword = async (req, res) => {
+    if (!req.user) return res.redirect("/");
+    const user = await findUserById(req.user.id);
+    if (!user) return res.status(404).send("user not found");
+
+    return res.render("auth/change-password", {
+        errors: req.flash("errors"),
+    })
+}
+
+//! postChnagePassword
+
+export const postChangePassword = async (req, res) => {
+    if (!req.user) return res.redirect("/");
+
+    try {
+        // Using parse() and storing in "data"
+        const data = verifyPasswordSchema.parse(req.body);
+
+        // Now extract values from data
+        const { currentPassword, newPassword } = data;
+
+        // Find user
+        const user = await findUserById(req.user.id);
+        if (!user) return res.status(404).send("user not found");
+
+        // Check old password
+        const isPasswordValid = comparePassword(currentPassword, user.password);
+        if (!isPasswordValid) {
+            req.flash("errors", "Current password that you entered is invalid");
+            return res.redirect("/change-password");
+        }
+
+        // Update password
+        await updateUserPassword({ userId: user.id, newPassword });
+
+        // Success message
+        req.flash("success", "Password updated successfully!");
+        return res.redirect("/profile");
+
+    } catch (error) {
+        console.log(error);
+
+        // Zod validation error (parse())
+        if (error.errors) {
+            const errors = error.errors.map(err => err.message);
+            req.flash("errors", errors);
+        } else {
+            req.flash("errors", ["Something went wrong. Please try again."]);
+        }
+
+        return res.redirect("/change-password");
+    }
+};
+
 
 

@@ -1,0 +1,101 @@
+<mjml>
+  <mj-head>
+    <mj-attributes>
+      <mj-all font-family="Arial, sans-serif" />
+      <mj-text color="#333333" />
+    </mj-attributes>
+  </mj-head>
+  <mj-body background-color="#f4f4f4">
+    <!-- Main Container -->
+    <mj-section background-color="#ffffff" padding="50px 30px">
+      <mj-column>
+        <!-- Checkmark Icon -->
+        <mj-image 
+          src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 100 100'%3E%3Cpath fill='%23FF0000' d='M20,50 L40,70 L80,20' stroke='%23FF0000' stroke-width='8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" 
+          width="80px" 
+          align="right"
+          padding-bottom="30px"
+        />
+        
+        <!-- Header -->
+        <mj-text 
+          align="center" 
+          font-size="32px" 
+          font-weight="bold" 
+          color="#1a1a1a"
+          padding-bottom="30px"
+        >
+          Verify Your Email Address
+        </mj-text>
+        
+        <!-- Description -->
+        <mj-text 
+          align="left" 
+          font-size="16px" 
+          color="#5a5a5a"
+          padding-bottom="30px"
+        >
+          Thanks for signing up! Please verify your email address to complete your registration.
+        </mj-text>
+        
+        <!-- Verification Code Label -->
+        <mj-text 
+          align="center" 
+          font-size="16px" 
+          color="#5a5a5a"
+          padding-bottom="20px"
+        >
+          Your verification code:
+        </mj-text>
+        
+        <!-- Verification Code Box -->
+        <mj-table padding-bottom="30px">
+          <tr>
+            <td align="center">
+              <table cellpadding="0" cellspacing="0" style="border: 8px solid #FF0000; background-color: #ffffff; display: inline-block; margin: 0 auto;">
+                <tr>
+                  <td style="padding: 30px 80px; font-size: 38px; font-weight: bold; color: #1a1a1a; letter-spacing: 8px; font-family: 'Courier New', monospace;">
+                    <%= code %>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </mj-table>
+        
+        <!-- Alternative Text -->
+        <mj-text 
+          align="center" 
+          font-size="16px" 
+          color="#5a5a5a"
+          padding-bottom="25px"
+        >
+          Alternatively, you can directly verify your account by clicking the button below:
+        </mj-text>
+        
+        <!-- Verify Button -->
+        <mj-button 
+          background-color="#0d6efd" 
+          color="#ffffff"
+          font-size="16px"
+          font-weight="600"
+          border-radius="6px"
+          padding-bottom="35px"
+          href="<%= link %>"
+          inner-padding="14px 40px"
+        >
+          Verify My Email
+        </mj-button>
+        
+        <!-- Footer Text -->
+        <mj-text 
+          align="center" 
+          font-size="14px" 
+          color="#999999"
+        >
+          If you didn't sign up for this account, you can safely ignore this email.
+        </mj-text>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>
