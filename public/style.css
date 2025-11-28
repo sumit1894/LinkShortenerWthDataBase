@@ -1,6 +1,6 @@
-/* Edit Profile Page Styles */
-/* Change Password Page Styles */
-
+/* ===================================
+   GLOBAL STYLES & RESET
+   =================================== */
 * {
   margin: 0;
   padding: 0;
@@ -8,1089 +8,1083 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
-  background-color: #f0f2f5;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   min-height: 100vh;
-}
-
-.password-container {
-  max-width: 520px;
-  margin: 50px auto;
-  background-color: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  overflow: hidden;
-}
-
-/* Status Badge Styles */
-.status-badge {
-  background-color: #d4edda;
-  color: #155724;
-  padding: 16px 28px;
   display: flex;
+  flex-direction: column;
+  color: #333;
+  line-height: 1.6;
+}
+
+/* ===================================
+   HEADER STYLES
+   =================================== */
+header {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 1.2rem 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 10px;
-  font-size: 15px;
+}
+
+.logo h1 {
+  font-size: 1.8rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+}
+
+nav ul {
+  display: flex;
+  list-style: none;
+  gap: 2rem;
+  align-items: center;
+}
+
+nav ul li a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  position: relative;
+  padding: 0.5rem 0;
+}
+
+nav ul li a::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  transition: width 0.3s ease;
+}
+
+nav ul li a:hover::after {
+  width: 100%;
+}
+
+nav ul li a:hover {
+  color: #667eea;
+}
+
+/* ===================================
+   FOOTER STYLES
+   =================================== */
+footer {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  text-align: center;
+  padding: 1.5rem;
+  margin-top: auto;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+}
+
+footer p {
+  color: #666;
+  font-size: 0.95rem;
+}
+
+/* ===================================
+   STATUS BADGE
+   =================================== */
+.status-badge {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 0.8rem 1.5rem;
+  border-radius: 50px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  margin: 2rem auto;
+  font-weight: 500;
 }
 
 .status-badge i {
-  color: #28a745;
-  font-size: 16px;
+  color: #10b981;
+  font-size: 1.2rem;
 }
 
-/* Form Content Styles */
-.password-form-content {
-  padding: 45px 35px;
-}
-
-.password-form-content h1 {
-  font-size: 30px;
-  color: #1a1a1a;
-  margin-bottom: 8px;
-  font-weight: 500;
-}
-
-.underline {
-  width: 50px;
-  height: 3px;
-  background-color: #2563eb;
-  margin-bottom: 35px;
-}
-
-/* Form Group Styles */
-.password-form-group {
-  margin-bottom: 25px;
-}
-
-/* Password Input Wrapper */
-.password-input-wrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
-  border-bottom: 1px solid #d0d0d0;
-  padding: 12px 0;
-}
-
-.input-icon {
-  color: #9ca3af;
-  font-size: 16px;
-  margin-right: 12px;
-}
-
-.password-input-wrapper input[type="password"],
-.password-input-wrapper input[type="text"] {
+/* ===================================
+   HERO SECTION (Home Page)
+   =================================== */
+.hero {
   flex: 1;
-  border: none;
-  outline: none;
-  font-size: 15px;
-  color: #333;
-  background: transparent;
-  padding: 0;
-}
-
-.password-input-wrapper input::placeholder {
-  color: #d0d0d0;
-  font-weight: 300;
-}
-
-.password-input-wrapper:focus-within {
-  border-bottom-color: #2563eb;
-}
-
-.toggle-password {
-  color: #9ca3af;
-  cursor: pointer;
-  font-size: 16px;
-  transition: color 0.2s;
-  margin-left: 10px;
-}
-
-.toggle-password:hover {
-  color: #6b7280;
-}
-
-/* Password Requirements Box */
-.password-requirements {
-  background-color: #f8f9fa;
-  padding: 18px 20px;
-  border-radius: 6px;
-  margin-bottom: 25px;
-}
-
-.requirements-title {
-  font-weight: 500;
-  color: #333;
-  margin-bottom: 10px;
-  font-size: 14px;
-}
-
-.password-requirements ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.password-requirements li {
-  color: #6b7280;
-  font-size: 13px;
-  margin-bottom: 6px;
-  padding-left: 18px;
-  position: relative;
-  line-height: 1.5;
-}
-
-.password-requirements li::before {
-  content: "•";
-  position: absolute;
-  left: 0;
-  color: #9ca3af;
-}
-
-/* Error Messages */
-.password-error-message {
-  color: #dc2626;
-  font-size: 13px;
-  margin-bottom: 20px;
-  padding: 12px 16px;
-  background-color: #fef2f2;
-  border-left: 3px solid #dc2626;
-  border-radius: 4px;
-  line-height: 1.5;
-}
-
-/* Submit Button Styles */
-.password-submit-btn {
-  width: 100%;
-  padding: 15px;
-  font-size: 16px;
-  font-weight: 500;
-  color: #ffffff;
-  background-color: #2563eb;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.2s, transform 0.1s;
-}
-
-.password-submit-btn:hover {
-  background-color: #1d4ed8;
-}
-
-.password-submit-btn:active {
-  background-color: #1e40af;
-  transform: scale(0.98);
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .password-container {
-    margin: 20px;
-    border-radius: 8px;
-  }
-
-  .password-form-content {
-    padding: 35px 25px;
-  }
-
-  .password-form-content h1 {
-    font-size: 26px;
-  }
-
-  .status-badge {
-    padding: 14px 20px;
-    font-size: 14px;
-  }
-}
-
-@media (max-width: 480px) {
-  .password-form-content h1 {
-    font-size: 24px;
-  }
-
-  .password-input-wrapper input {
-    font-size: 14px;
-  }
-
-  .password-submit-btn {
-    font-size: 15px;
-    padding: 13px;
-  }
-
-  .password-requirements {
-    padding: 15px 16px;
-  }
-}
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: Arial, sans-serif;
-  background-color: #f5f5f5;
-  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
 }
 
 .container {
-  max-width: 1100px;
-  margin: 40px auto;
-  background-color: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 2rem;
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 700px;
 }
 
-/* Status Badge Styles */
-.status-badge {
-  background-color: #d4edda;
-  color: #155724;
-  padding: 15px 25px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 16px;
+.container h1 {
+  font-size: 2.5rem;
+  text-align: center;
+  margin-bottom: 2rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-.status-badge i {
-  color: #28a745;
-  font-size: 18px;
+.container h2 {
+  font-size: 1.8rem;
+  margin: 2rem 0 1.5rem;
+  color: #333;
 }
 
-/* Form Content Styles */
-.form-content {
-  padding: 50px 40px;
+/* ===================================
+   FORM STYLES (Common)
+   =================================== */
+.url-form,
+form {
+  margin-bottom: 2rem;
 }
 
-.form-content h1 {
-  font-size: 36px;
-  color: #1a1a1a;
-  margin-bottom: 10px;
-  font-weight: 400;
-}
-
-.underline {
-  width: 60px;
-  height: 4px;
-  background-color: #0d6efd;
-  margin-bottom: 50px;
-}
-
-/* Form Group Styles */
 .form-group {
-  margin-bottom: 40px;
+  margin-bottom: 1.5rem;
 }
 
 .form-group label {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 16px;
-  color: #666;
-  margin-bottom: 10px;
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #555;
+  font-size: 1rem;
 }
 
-.form-group .icon {
-  font-size: 20px;
-  color: #999;
-}
-
-.form-group input[type="text"] {
+.form-group input,
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[name="url"],
+input[name="shortCode"],
+input[name="name"],
+input[name="email"],
+input[name="password"] {
   width: 100%;
-  padding: 15px 0;
-  font-size: 18px;
-  border: none;
-  border-bottom: 2px solid #ddd;
+  padding: 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 10px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background: #fff;
+}
+
+.form-group input:focus,
+input:focus {
   outline: none;
-  transition: border-color 0.3s;
-  background-color: transparent;
-  color: #333;
+  border-color: #667eea;
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
 }
 
-.form-group input[type="text"]:focus {
-  border-bottom-color: #0d6efd;
-}
-
-/* Error Messages */
-.error-message {
-  color: #dc3545;
-  font-size: 14px;
-  margin-bottom: 20px;
-  padding: 10px;
-  background-color: #f8d7da;
-  border-left: 3px solid #dc3545;
-  border-radius: 4px;
-}
-
-/* Submit Button Styles */
-.form-submit {
+button,
+.form-submit,
+button[type="submit"] {
   width: 100%;
-  padding: 16px;
-  font-size: 18px;
-  font-weight: 500;
-  color: #ffffff;
-  background-color: #0d6efd;
+  padding: 1rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.3s, transform 0.1s;
+  transition: all 0.3s ease;
+  margin-top: 1rem;
 }
 
+button:hover,
 .form-submit:hover {
-  background-color: #0b5ed7;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 }
 
-.form-submit:active {
-  background-color: #0a58ca;
-  transform: scale(0.98);
+button:active {
+  transform: translateY(0);
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-  .container {
-    margin: 20px;
-    border-radius: 6px;
-  }
-
-  .form-content {
-    padding: 30px 20px;
-  }
-
-  .form-content h1 {
-    font-size: 28px;
-  }
-
-  .status-badge {
-    padding: 12px 20px;
-    font-size: 14px;
-  }
-}
-
-@media (max-width: 480px) {
-  .form-content h1 {
-    font-size: 24px;
-  }
-
-  .form-group input[type="text"] {
-    font-size: 16px;
-  }
-
-  .form-submit {
-    font-size: 16px;
-    padding: 14px;
-  }
-}
-
-/* 🌐 Global Reset */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: Arial, sans-serif;
-}
-
-/* 🔹 HEADER */
-header {
-  background-color: #222;
-  color: white;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px 50px;
-}
-
-header .logo h1 {
-  font-size: 24px;
-}
-
-nav ul {
-  display: flex;
-  list-style: none;
-}
-
-nav ul li {
-  margin: 0 15px;
-}
-
-nav ul li a {
-  text-decoration: none;
-  color: white;
-  font-weight: bold;
-  transition: color 0.3s;
-}
-
-nav ul li a:hover {
-  color: #ff9800;
-}
-
-/* 🏠 HERO SECTION (URL SHORTENER PAGE) */
-.hero {
-  min-height: 80vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: #f5f5f5;
-  padding: 40px 0;
-}
-
-.container {
-  background: white;
-  padding: 30px 40px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  width: 600px;
-  text-align: center;
-
-}
-
-.container h1 {
-  color: #333;
-  margin-bottom: 20px;
-}
-
-.url-form {
-  margin-bottom: 25px;
-  text-align: left;
-}
-
-.form-group {
-  margin-bottom: 15px;
-}
-
-label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: bold;
-  color: #333;
-}
-
-input[type="url"],
-input[type="text"],
-input[type="email"],
-input[type="password"],
-input[type="name"] {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-button {
-  width: 100%;
-  padding: 10px;
-  background-color: #ff9800;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s;
-}
-
-button:hover {
-  background-color: #e68900;
-}
-
-/* 🔗 SHORTENED URL LIST */
+/* ===================================
+   URL LIST STYLES
+   =================================== */
 .url-list {
   list-style: none;
   padding: 0;
-  margin-top: 20px;
-  text-align: left;
 }
 
 .url-list li {
-  margin-bottom: 10px;
-}
-
-.url-list a {
-  color: #007bff;
-  text-decoration: none;
-  font-weight: bold;
-}
-
-.url-list a:hover {
-  text-decoration: underline;
-}
-
-/* 🧾 SIGNUP / REGISTER / LOGIN FORM */
-.signup-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 80vh;
-  background: #f5f5f5;
-}
-
-.signup-box {
-  background: white;
-  padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  width: 350px;
-}
-
-.signup-box h2 {
-  text-align: center;
-  margin-bottom: 20px;
-  color: #333;
-}
-
-.signup-box input {
-  width: 100%;
-  padding: 10px;
-  margin: 10px 0;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-.signup-box button {
-  width: 100%;
-  padding: 10px;
-  background-color: #ff9800;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s;
-}
-
-.signup-box button:hover {
-  background-color: #e68900;
-}
-
-/* ⚓ FOOTER */
-footer {
-  background-color: #222;
-  color: white;
-  text-align: center;
-  padding: 15px 0;
-}
-
-
-
-
-/* 🌐 Global Reset */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: Arial, sans-serif;
-}
-
-/* 🔹 HEADER */
-header {
-  background-color: #222;
-  color: white;
+  background: #f9fafb;
+  padding: 1.2rem;
+  margin-bottom: 1rem;
+  border-radius: 12px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 50px;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
 }
 
-header .logo h1 {
-  font-size: 24px;
+.url-list li:hover {
+  border-color: #667eea;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.15);
 }
 
-nav ul {
-  display: flex;
-  list-style: none;
-}
-
-nav ul li {
-  margin: 0 15px;
-}
-
-nav ul li a {
+.url-info a {
+  color: #667eea;
   text-decoration: none;
-  color: white;
-  font-weight: bold;
-  transition: color 0.3s;
+  font-weight: 600;
+  transition: color 0.3s ease;
 }
 
-nav ul li a:hover {
-  color: #ff9800;
-}
-
-/* 🏠 HERO SECTION (URL SHORTENER PAGE) */
-.hero {
-  min-height: 80vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: #f5f5f5;
-  padding: 40px 0;
-}
-
-.container {
-  background: white;
-  padding: 30px 40px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  width: 600px;
-  text-align: center;
-}
-
-.container h1 {
-  color: #333;
-  margin-bottom: 20px;
-}
-
-.url-form {
-  margin-bottom: 25px;
-  text-align: left;
-}
-
-.form-group {
-  margin-bottom: 15px;
-}
-
-label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: bold;
-  color: #333;
-}
-
-input[type="url"],
-input[type="text"],
-input[type="email"],
-input[type="password"],
-input[type="name"] {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-button {
-  width: 100%;
-  padding: 10px;
-  background-color: #ff9800;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s;
-}
-
-button:hover {
-  background-color: #e68900;
-}
-
-/* 🔗 SHORTENED URL LIST */
-.url-list {
-  list-style: none;
-  padding: 0;
-  margin-top: 20px;
-  text-align: left;
-}
-
-.url-list li {
-  margin-bottom: 10px;
-}
-
-.url-list a {
-  color: #007bff;
-  text-decoration: none;
-  font-weight: bold;
-}
-
-.url-list a:hover {
+.url-info a:hover {
+  color: #764ba2;
   text-decoration: underline;
 }
 
-/* 🧾 SIGNUP / REGISTER / LOGIN FORM */
-.signup-container {
+.url-action {
   display: flex;
+  gap: 0.5rem;
+}
+
+.copy-btn,
+.edit-btn {
+  width: auto;
+  height: 50px;
+  padding: 0.6rem 0.8rem;
+  background: #667eea;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin: 0;
+}
+
+.copy-btn:hover {
+  background: #764ba2;
+}
+
+.copy-btn i {
+  color: white;
+  font-size: 1rem;
+}
+
+.edit-btn a {
+  color: white;
+  text-decoration: none;
+}
+
+/* ===================================
+   SIGNUP/LOGIN CONTAINER
+   =================================== */
+.signup-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 80vh;
-  background: #f5f5f5;
+  padding: 2rem;
+  gap: 1.5rem;
 }
 
 .signup-box {
-  background: white;
-  padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  width: 350px;
-}
-
-.signup-box h2 {
-  text-align: center;
-  margin-bottom: 20px;
-  color: #333;
-}
-
-.signup-box input {
-  width: 100%;
-  padding: 10px;
-  margin: 10px 0;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-.signup-box button {
-  width: 100%;
-  padding: 10px;
-  background-color: #ff9800;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s;
-}
-
-.signup-box button:hover {
-  background-color: #e68900;
-}
-
-/* ⚓ FOOTER */
-footer {
-  background-color: #222;
-  color: white;
-  text-align: center;
-  padding: 15px 0;
-}
-
-/* 👤 PROFILE PAGE STYLES */
-.profile-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 80vh;
-  background: #f5f5f5;
-  padding: 40px 20px;
-}
-
-.profile-box {
-  background: white;
-  padding: 40px;
-  border-radius: 10px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-  width: 500px;
-}
-
-.profile-box h1 {
-  color: #333;
-  margin-bottom: 20px;
-  font-size: 28px;
-}
-
-.status-badge {
-  display: inline-flex;
-  align-items: center;
-  background: #e8f5e9;
-  color: #2e7d32;
-  padding: 8px 15px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 3rem;
   border-radius: 20px;
-  font-size: 14px;
-  margin-bottom: 25px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 450px;
 }
 
-.status-badge i {
-  margin-right: 8px;
+.signup-box h2 {
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 2rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-.profile-info {
-  text-align: left;
-  margin-bottom: 30px;
+.signup-box input {
+  margin-bottom: 1rem;
 }
 
-.profile-avatar {
-  width: 60px;
-  height: 60px;
-  background: #ff9800;
-  color: white;
+.forgot-link {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.forgot-link a {
+  color: #667eea;
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: color 0.3s ease;
+}
+
+.forgot-link a:hover {
+  color: #764ba2;
+  text-decoration: underline;
+}
+
+/* ===================================
+   SOCIAL LOGIN
+   =================================== */
+.social-login {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 2rem;
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  width: 100%;
+  max-width: 450px;
+}
+
+.social-login p {
+  margin-bottom: 1.5rem;
+  color: #666;
+  font-weight: 500;
+}
+
+.social-icons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.social-btn {
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 28px;
+  color: white;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  font-size: 1.2rem;
+}
+
+.social-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+.social-btn.facebook {
+  background: #1877f2;
+}
+
+.social-btn.github {
+  background: #333;
+}
+
+.social-btn.google {
+  background: #ea4335;
+}
+
+/* ===================================
+   PROFILE CONTAINER
+   =================================== */
+.profile-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
+.profile-box {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 3rem;
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 600px;
+  text-align: center;
+}
+
+.profile-box h1 {
+  font-size: 2.2rem;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.profile-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 2rem auto;
+  font-size: 3rem;
+  color: white;
   font-weight: bold;
-  margin-bottom: 15px;
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+
+}
+
+.profile-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
 }
 
 .profile-name {
-  font-size: 24px;
-  font-weight: bold;
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
   color: #333;
-  margin-bottom: 10px;
-  text-transform: uppercase;
+}
+
+.profile-info {
+  margin-bottom: 2rem;
 }
 
 .profile-detail {
   display: flex;
   align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 0.8rem 0;
   color: #666;
-  margin-bottom: 8px;
-  font-size: 14px;
+  font-size: 1rem;
 }
 
 .profile-detail i {
-  width: 20px;
-  margin-right: 10px;
-  color: #888;
+  color: #667eea;
 }
 
 .profile-stats {
-  border-top: 1px solid #eee;
-  padding-top: 20px;
-  margin-top: 20px;
+  display: flex;
+  justify-content: space-around;
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: #f9fafb;
+  border-radius: 15px;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
 .stat-item {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 10px;
-  color: #666;
-  font-size: 14px;
+  text-align: center;
 }
 
 .stat-label {
-  font-weight: bold;
+  display: block;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #667eea;
+  margin-bottom: 0.3rem;
+}
+
+.stat-item span:last-child {
+  font-size: 0.9rem;
+  color: #666;
 }
 
 .profile-actions {
   display: flex;
-  gap: 10px;
-  margin-top: 25px;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 2rem;
 }
 
 .profile-actions a {
+  padding: 1rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
   text-decoration: none;
-  color: #007bff;
-  font-size: 14px;
+  border-radius: 10px;
+  font-weight: 600;
+  transition: all 0.3s ease;
   display: flex;
   align-items: center;
-  transition: color 0.3s;
-}
-
-.profile-actions a i {
-  margin-right: 5px;
+  justify-content: center;
+  gap: 0.5rem;
 }
 
 .profile-actions a:hover {
-  color: #0056b3;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 }
 
 .logout-link {
-  color: #dc3545 !important;
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
 }
 
-.logout-link:hover {
-  color: #a02a2a !important;
-}
-
-
-
-
-/* 🌐 Global Reset */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: Arial, sans-serif;
-}
-
-body {
-  background: #f5f5f5;
-}
-
-/* 🔹 HEADER */
-header {
-  background-color: #222;
-  color: white;
+/* ===================================
+   PASSWORD CONTAINER
+   =================================== */
+.password-container {
+  flex: 1;
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  padding: 15px 50px;
+  padding: 2rem;
+  gap: 1.5rem;
 }
 
-header .logo h1 {
-  font-size: 24px;
+.password-form-content {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 3rem;
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 550px;
 }
 
-nav ul {
+.password-form-content h1 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-align: center;
+}
+
+.underline {
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  margin: 0 auto 2rem;
+}
+
+.password-form-group {
+  margin-bottom: 1.5rem;
+}
+
+.password-input-wrapper {
+  position: relative;
   display: flex;
+  align-items: center;
+}
+
+.password-input-wrapper input {
+  width: 100%;
+  padding: 1rem 3rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 10px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.password-input-wrapper input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+}
+
+.input-icon {
+  position: absolute;
+  left: 1rem;
+  color: #667eea;
+  font-size: 1.1rem;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 1rem;
+  color: #999;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.toggle-password:hover {
+  color: #667eea;
+}
+
+.password-requirements {
+  background: #f0f9ff;
+  padding: 1rem;
+  border-radius: 10px;
+  margin-bottom: 1.5rem;
+  border-left: 4px solid #667eea;
+}
+
+.requirements-title {
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.password-requirements ul {
   list-style: none;
+  padding-left: 0;
 }
 
-nav ul li {
-  margin: 0 15px;
+.password-requirements li {
+  padding: 0.3rem 0;
+  color: #666;
+  font-size: 0.95rem;
 }
 
-nav ul li a {
-  text-decoration: none;
-  color: white;
+.password-requirements li::before {
+  content: "✓ ";
+  color: #667eea;
   font-weight: bold;
-  transition: color 0.3s;
+  margin-right: 0.5rem;
 }
 
-nav ul li a:hover {
-  color: #ff9800;
+.password-error-message {
+  background: #fee;
+  color: #c33;
+  padding: 0.8rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+  border-left: 4px solid #c33;
 }
 
-/* ✉️ EMAIL VERIFICATION STYLES */
+.password-submit-btn {
+  width: 100%;
+  padding: 1rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.password-submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+/* ===================================
+   CARD STYLES (Reset Password, etc.)
+   =================================== */
+.card {
+  width: 450px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 3rem;
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  margin: 2rem auto;
+}
+
+.alert {
+  padding: 1rem 1.2rem;
+  background: #fff3cd;
+  border-left: 4px solid #ffc107;
+  margin-bottom: 1.5rem;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  color: #8a6d3b;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.card h2 {
+  margin: 1rem 0 0.5rem;
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.input-box {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+.input-box input {
+  width: 100%;
+  padding: 1rem 1rem 1rem 3rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 10px;
+  font-size: 1rem;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.input-box input:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+}
+
+.input-box i {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #667eea;
+}
+
+.card p {
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.6;
+}
+
+/* ===================================
+   VERIFICATION CONTAINER
+   =================================== */
 .verification-container {
+  flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 80vh;
-  padding: 40px 20px;
+  padding: 2rem;
 }
 
 .verification-box {
-  background: white;
-  padding: 40px;
-  border-radius: 10px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-  width: 600px;
-  max-width: 100%;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 3rem;
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 600px;
 }
 
 .verification-box h1 {
+  font-size: 2rem;
   text-align: center;
-  color: #333;
-  margin-bottom: 30px;
-  font-size: 28px;
-}
-
-.status-badge {
-  display: flex;
-  align-items: center;
-  background: #e8f5e9;
-  color: #2e7d32;
-  padding: 15px 20px;
-  border-radius: 8px;
-  font-size: 14px;
-  margin-bottom: 30px;
-  border: 1px solid #c8e6c9;
-}
-
-.status-badge i {
-  margin-right: 10px;
-  font-size: 18px;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .email-info {
-  background: #f9f9f9;
-  padding: 20px;
-  border-radius: 8px;
-  margin-bottom: 25px;
-  border-left: 4px solid #ff9800;
+  background: #f0f9ff;
+  padding: 1rem;
+  border-radius: 10px;
+  margin: 1.5rem 0;
+  border-left: 4px solid #667eea;
 }
 
 .email-info p {
+  margin: 0;
   color: #333;
-  font-size: 16px;
-  margin-bottom: 0;
-}
-
-.email-info strong {
-  color: #ff9800;
 }
 
 .info-text {
   color: #666;
   line-height: 1.6;
-  margin-bottom: 20px;
-  font-size: 15px;
-}
-
-.resend-btn {
-  background: #6c757d;
-  color: white;
-  padding: 12px 25px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 15px;
-  transition: background 0.3s;
-  float: right;
-}
-
-.resend-btn:hover {
-  background: #5a6268;
+  margin-bottom: 1.5rem;
 }
 
 .verification-form {
-  background: #f9f9f9;
-  padding: 25px;
-  border-radius: 8px;
-  margin-top: 30px;
+  margin-top: 2rem;
 }
 
-.verification-form h3 {
-  color: #333;
-  margin-bottom: 20px;
+.verify-btn {
+  width: 100%;
+  padding: 1rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 1rem;
+}
+
+.verify-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+/* ===================================
+   ERROR MESSAGES
+   =================================== */
+.error-message {
+  color: #dc2626;
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+  padding: 0.8rem;
+  background: #fee;
+  border-radius: 8px;
+  border-left: 4px solid #dc2626;
+}
+
+/* ===================================
+   RESPONSIVE DESIGN
+   =================================== */
+@media (max-width: 768px) {
+  header {
+    flex-direction: column;
+    padding: 1rem;
+  }
+
+  nav ul {
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .container,
+  .signup-box,
+  .profile-box,
+  .password-form-content,
+  .verification-box,
+  .card {
+    padding: 2rem;
+    max-width: 100%;
+  }
+
+  .url-list li {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .url-action {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .profile-stats {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo h1 {
+    font-size: 1.4rem;
+  }
+
+  .container h1,
+  .profile-box h1 {
+    font-size: 1.8rem;
+  }
+
+  .signup-box h2 {
+    font-size: 1.5rem;
+  }
+}
+
+/* -----------------------------------
+   Edit Profile Page Container
+------------------------------------*/
+.container-edit-profile {
+  width: 95%;
+  max-width: 600px;
+  margin: 40px auto;
+}
+
+/* -----------------------------------
+   Status Badge (Login Indicator)
+------------------------------------*/
+.status-badge {
+  margin: 20px auto;
+  padding: 12px 20px;
+  width: fit-content;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #e8f3ff;
+  border-left: 4px solid #2563eb;
+  border-radius: 8px;
+  font-weight: 600;
+  color: #2563eb;
+  font-size: 15px;
+}
+
+.status-badge i {
   font-size: 18px;
 }
 
+/* -----------------------------------
+   Form Box
+------------------------------------*/
+.form-content {
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 14px;
+  box-shadow: 0px 6px 25px rgba(0, 0, 0, 0.08);
+}
+
+.form-content h1 {
+  text-align: center;
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 5px;
+  color: #222;
+}
+
+/* Blue underline under heading */
+.underline {
+  width: 60px;
+  height: 4px;
+  background: #2563eb;
+  margin: 10px auto 25px auto;
+  border-radius: 4px;
+}
+
+/* -----------------------------------
+   Form Group + Input
+------------------------------------*/
 .form-group {
-  margin-bottom: 20px;
+  margin-bottom: 22px;
+  position: relative;
+}
+
+/* .form-group label {
+    position: absolute;
+    top: 50%;
+    left: 12px;
+    transform: translateY(-50%);
+    pointer-events: none;
+    font-size: 20px;
+} */
+
+
+/* Floating icon label ONLY for Edit Profile page */
+.container-edit-profile .form-group label {
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  transform: translateY(-50%);
+  pointer-events: none;
+  margin: 0;
+}
+
+/* Normal labels everywhere else */
+:not(.container-edit-profile) .form-group label {
+  position: static;
+  transform: none;
+  margin-bottom: 6px;
+}
+
+.form-group .icon {
+  color: #777;
+  font-size: 22px;
 }
 
 .form-group input {
   width: 100%;
-  padding: 12px;
-  border: 2px solid #ddd;
-  border-radius: 5px;
+  padding: 12px 15px 12px 45px;
+  border-radius: 10px;
+  border: 1.5px solid #dcdcdc;
+  background: #f9f9f9;
   font-size: 16px;
-  letter-spacing: 3px;
-  text-align: center;
-  font-weight: bold;
+  transition: border-color .25s, background .25s;
 }
 
 .form-group input:focus {
+  border-color: #2563eb;
+  background: #fff;
   outline: none;
-  border-color: #007bff;
 }
 
-.verify-btn {
-  background: #007bff;
-  color: white;
-  padding: 12px 30px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background 0.3s;
-}
-
-.verify-btn:hover {
-  background: #0056b3;
-}
-
+/* -----------------------------------
+   Error Message
+------------------------------------*/
 .error-message {
-  background: #f8d7da;
-  color: #721c24;
-  padding: 12px;
-  border-radius: 5px;
-  margin-bottom: 20px;
-  border: 1px solid #f5c6cb;
+  color: #dc2626;
+  font-size: 14px;
+  margin-bottom: 8px;
+  font-weight: 500;
 }
 
-.success-message {
-  background: #d4edda;
-  color: #155724;
+/* -----------------------------------
+   Submit Button
+------------------------------------*/
+.form-submit {
+  width: 100%;
   padding: 12px;
-  border-radius: 5px;
-  margin-bottom: 20px;
-  border: 1px solid #c3e6cb;
+  background: #2563eb;
+  border: none;
+  color: #ffffff;
+  font-size: 17px;
+  font-weight: 600;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s ease;
 }
 
-/* ⚓ FOOTER */
-footer {
-  background-color: #222;
-  color: white;
-  text-align: center;
-  padding: 15px 0;
-  margin-top: 50px;
+.form-submit:hover {
+  background: #1d4ed8;
+  transform: translateY(-2px);
+}
+
+/* -----------------------------------
+   Responsive Design
+------------------------------------*/
+@media (max-width: 600px) {
+  .form-content {
+    padding: 22px;
+  }
+
+  .form-group input {
+    font-size: 15px;
+  }
+}
+
+
+/* ======================================
+   FIX: Edit Profile Input Placeholder Issue
+   ====================================== */
+
+/* Smooth animation for label (icon) */
+.form-group label {
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+/* Hide the icon label when input is focused */
+.form-group input:focus~label {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-5px);
+}
+
+/* Hide the icon label when input contains text */
+.form-group input:not(:placeholder-shown)~label {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-5px);
+}
+
+/* Ensure placeholder text shows properly */
+.form-group input::placeholder {
+  opacity: 1 !important;
+  color: #777;
+  transition: 0.25s ease;
+}
+
+/* Placeholder animation (optional but modern) */
+.form-group input:focus::placeholder {
+  opacity: 0.5;
 }

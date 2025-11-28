@@ -6,6 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Signup</title>
   <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 </head>
 
 <body>
@@ -17,7 +19,7 @@
       <div class="signup-box">
         <h2>Signup</h2>
         <form action="/login" method="POST">
-          <input  name="email" placeholder="Email">
+          <input name="email" placeholder="Email">
           <input name="password" placeholder="Password">
           <% if (errors && errors.length> 0) { %>
             <% errors.forEach((error)=> { %>
@@ -28,6 +30,26 @@
                 <% } %>
                   <button type="submit">Register</button>
         </form>
+        <div class="forgot-link">
+          <a href="/reset-password">forget password?</a>
+        </div>
+      </div>
+      <div class="social-login">
+        <p>Or login with</p>
+
+        <div class="social-icons">
+          <a href="#" class="social-btn facebook">
+            <i class="fa-brands fa-facebook-f"></i>
+          </a>
+
+          <a href="/github" class="social-btn github">
+            <i class="fa-brands fa-github"></i>
+          </a>
+
+          <a href="/google" class="social-btn google">
+            <i class="fa-brands fa-google"></i>
+          </a>
+        </div>
       </div>
     </section>
 

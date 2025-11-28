@@ -15,7 +15,7 @@ async function verifyPassword(password,hashedPassword) {
 
 const password1=Array.from({length:75}).fill("x").join("");
 const password2=Array.from({length:75}).fill("x").join("")+Math.random();
-console.log({password1,password2})
+
 
 const hashedPassword1=await hashPassword(password1)
 const hashedPassword2=await hashPassword(password2)

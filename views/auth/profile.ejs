@@ -30,9 +30,13 @@
 
                 <div class="profile-info">
                     <div class="profile-avatar">
+                        <% if(user.avatarUrl){ %>
+                        <img src="<%= user.avatarUrl %>" alt="logo">
+                        <% }else{ %>
                         <span>
                             <%= user.name.charAt(0).toUpperCase() %>
                         </span>
+                        <% } %>
                     </div>
 
                     <div class="profile-name">
@@ -90,12 +94,18 @@
                     <a href="/edit-profile">
                         <i class="fas fa-edit"></i> Edit Profile
                     </a>
-                    <a href="/change-password">
-                        <i class="fas fa-key"></i> Change Password
-                    </a>
-                    <a href="/logout" class="logout-link">
-                        <i class="fas fa-sign-out-alt"></i> Logout
-                    </a>
+                    <% if(user.hasPassword){ %>
+                        <a href="/change-password">
+                            <i class="fas fa-key"></i> Change Password
+                        </a>
+                        <% }else{ %>
+                            <a href="/set-password">
+                                <i class="fas fa-key"></i> Set Password
+                            </a>
+                            <% } %>
+                                <a href="/logout" class="logout-link">
+                                    <i class="fas fa-sign-out-alt"></i> Logout
+                                </a>
                 </div>
             </div>
         </div>

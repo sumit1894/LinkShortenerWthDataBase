@@ -1,7 +1,7 @@
 import { ACCESS_TOKEN_EXPIRY, MILLISECONDS_PER_SECOND, REFRESH_TOKEN_EXPIRY } from "../config/constants.js";
-import { eq, and, lt, sql, gte } from "drizzle-orm"
+import { eq, and, lt, sql, gte, gt, isNull } from "drizzle-orm"
 import { db } from "../config/db.js"
-import { sessionsTable, shortLinksTable, usersTable, verifyEmailTokenTable } from "../drizzle/schema.js"
+import { oauthAccountsTable, passwordResetTokenTable, sessionsTable, shortLinksTable, usersTable, verifyEmailTokenTable } from "../drizzle/schema.js"
 import { sendEmail } from "../lib/send-email.js"
 
 import argon2 from "argon2";
@@ -130,7 +130,6 @@ export const refreshTokens = async (refreshToken) => {
 }
 
 //!clearUserSession
-
 export const clearUserSession = async (sessionId) => {
     return db.delete(sessionsTable).where(eq(sessionsTable.id, sessionId));
 }
@@ -173,7 +172,6 @@ export const getAllShortLinks = async (userId) => {
 }
 
 //! generateRandomToken
-
 export const generateRandomToken = (digit = 8) => {
     const min = 10 ** (digit - 1); //10000000
     const max = 10 ** (digit);  //100000000
@@ -260,7 +258,6 @@ export const findVerificationEmailToken = async ({ token, email }) => {
 */
 
 //! findVerificationEmailToken + inner join
-
 export const findVerificationEmailToken = async ({ token, email }) => {
     return db
         .select({
@@ -279,19 +276,16 @@ export const findVerificationEmailToken = async ({ token, email }) => {
 }
 
 //!verifyUserEmailAndUpdate
-
 export const verifyUserEmailAndUpdate = async (email) => {
     return db.update(usersTable).set({ isEmailValid: true }).where(eq(usersTable.email, email))
 }
 
 //! clearVerifyEmailToken
-
 export const clearVerifyEmailToken = async (userId) => {
     return await db.delete(verifyEmailTokenTable).where(eq(verifyEmailTokenTable.userId, userId));
 }
 
 //! sendNewVerifyEmailLink
-
 export const sendNewVerifyEmailLink = async ({ userId, email }) => {
     const randomToken = generateRandomToken();
 
@@ -322,20 +316,120 @@ export const sendNewVerifyEmailLink = async ({ userId, email }) => {
 }
 
 //! updateUserByName
-
 export const updateUserByName = async ({ userId, name }) => {
     return await db.update(usersTable).set({ name }).where(eq(usersTable.id, userId));
 }
 
 //! updateUserPassword
+export const updateUserPassword = async ({ userId, newPassword }) => {
+    const newHashPassword = await hashPassword(newPassword);
 
-export const updateUserPassword=async({userId,newPassword})=>{
-    const newHashPassword=await hashPassword(newPassword);
-
-    return await db.update(usersTable).set({password:newHashPassword}).where(eq(usersTable.id,userId));
+    return await db.update(usersTable).set({ password: newHashPassword }).where(eq(usersTable.id, userId));
 }
 
+//! findUserByEmail
+export const findUserByEmail = async (email) => {
+    const [user] = await db.select().from(usersTable).where(eq(usersTable.email, email));
+    return user;
+}
 
+//! createResetPasswordLink
+export const createResetPasswordLink = async ({ userId }) => {
+    const randomToken = crypto.randomBytes(32).toString("hex");
+
+    const tokenHash = crypto.createHash("sha256").update(randomToken).digest("hex");
+
+    await db.delete(passwordResetTokenTable).where(eq(passwordResetTokenTable.userId, userId));
+
+    await db.insert(passwordResetTokenTable).values({ userId, tokenHash });
+
+    return `${process.env.FRONTEND_URL}/reset-password/${randomToken}`;
+}
+
+//! getResetPasswordTokenPage
+export const getResetPasswordToken = async (token) => {
+    const tokenHash = crypto.createHash("sha256").update(token).digest("hex");
+
+    const [data] = await db
+        .select()
+        .from(passwordResetTokenTable)
+        .where(
+            and(
+                eq(passwordResetTokenTable.tokenHash, tokenHash),
+                gt(passwordResetTokenTable.expiresAt, sql`CURRENT_TIMESTAMP`)
+            )
+        );
+
+    return data;
+}
+
+//! clearResetPasswordToken
+export const clearResetPasswordToken = async (userId) => {
+    return await db
+        .delete(passwordResetTokenTable)
+        .where(eq(passwordResetTokenTable.userId, userId));
+}
+
+//! getUserWithOauthId
+export const getUserWithOauthId = async ({ email, provider }) => {
+    const [user] = await db
+        .select({
+            id: usersTable.id,
+            name: usersTable.name,
+            email: usersTable.email,
+            isEmailValid: usersTable.isEmailValid,
+            providerAccountId: oauthAccountsTable.providerAccountId,
+            provider: oauthAccountsTable.provider,
+        })
+        .from(usersTable)
+        .where(eq(usersTable.email, email))
+        .leftJoin(
+            oauthAccountsTable,
+            and(
+                eq(oauthAccountsTable.userId, usersTable.id),
+                eq(oauthAccountsTable.provider, provider)
+            )
+        );
+
+    return user;
+}
+
+//!linkUserWithOauth
+export const linkUserWithOauth = async ({userId, provider, providerAccountId,avatarUrl}) => {
+    
+    await db.insert(oauthAccountsTable).values({
+        userId, provider, providerAccountId,
+    });
+    if (avatarUrl) {
+        await db
+        .update(usersTable)
+        .set({ avatarUrl })
+        .where(and(eq(usersTable.id, userId), isNull(usersTable.avatarUrl)))
+    }
+}
+
+//! createUserWithOauth
+export const createUserWithOauth = async ({ name, email, provider, providerAccountId, avatarUrl }) => {
+    const user = await db.transaction(async (trx) => {
+        const [user] = await trx.insert(usersTable).values({
+            name, email, avatarUrl, isEmailValid: true,
+        }).$returningId();
+
+        await trx.insert(oauthAccountsTable).values({
+            userId: user.id, provider, providerAccountId,
+        })
+        return {
+            id: user.id,
+            name,
+            email,
+            isEmailValid: true,
+            provider,
+            providerAccountId,
+        };
+    });
+
+    return user
+};
 
 
 

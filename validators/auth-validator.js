@@ -41,25 +41,48 @@ export const verifyUserSchema = z.object({
     name: nameSchema,
 })
 
-export const verifyPasswordSchema=z.object({
-    currentPassword:z
-    .string()
-    .min(1,{message:"Current password is required!"}),
+export const verifyPasswordSchema = z.object({
+    currentPassword: z
+        .string()
+        .min(1, { message: "Current password is required!" }),
 
-    newPassword:z
-    .string()
-    .min(6,{message:"new password must be atleast 6 character long."})
-    .max(100,{message:"New password must be no longer than 100 word character"}),
+    newPassword: z
+        .string()
+        .min(6, { message: "new password must be atleast 6 character long." })
+        .max(100, { message: "New password must be no longer than 100 word character" }),
 
-    confirmPassword:z
-    .string()
-    .min(6,{message:"Confirm Password must be atleast 6 character long."})
-    .max(100,{message:"Confirm password must ne no longer than 100 word character"})
+    confirmPassword: z
+        .string()
+        .min(6, { message: "Confirm Password must be atleast 6 character long." })
+        .max(100, { message: "Confirm password must ne no longer than 100 word character" })
 
-}).refine((data)=>data.newPassword===data.confirmPassword,{
-    message:"Password don't match",
-    path:["confirmPassword"],
+}).refine((data) => data.newPassword === data.confirmPassword, {
+    message: "Password don't match",
+    path: ["confirmPassword"],
 })
 
+
+export const forgetPasswordSchema = z.object({
+    email: emailSchema,
+})
+
+const passwordSchemas=z.object({
+    newPassword: z
+        .string()
+        .min(6, { message: "new password must be atleast 6 character long." })
+        .max(100, { message: "New password must be no longer than 100 word character" }),
+
+    confirmPassword: z
+        .string()
+        .min(6, { message: "Confirm Password must be atleast 6 character long." })
+        .max(100, { message: "Confirm password must ne no longer than 100 word character" })
+
+}).refine((data) => data.newPassword === data.confirmPassword, {
+    message: "Password don't match",
+    path: ["confirmPassword"],
+});
+
+export const verifyResetPasswordSchema = passwordSchemas;
+export const setPasswwordSchema=passwordSchemas;
 
 
