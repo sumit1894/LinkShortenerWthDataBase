@@ -87,7 +87,66 @@
 
     </section>
 
+<div class="pagination">
+
+  <!-- Prev Button -->
+  <a 
+    href="?page=<%= currentPage - 1 %>" 
+    class="page-btn <%= currentPage <= 1 ? 'disabled' : '' %>"
+  >
+    Prev
+  </a>
+
+  <% 
+    let startPage = Math.max(1, currentPage - 2);
+    let endPage = Math.min(totalPages, currentPage + 2);
+  %>
+
+  <!-- If start page > 1, show first page -->
+  <% if (startPage > 1) { %>
+    <a href="?page=1" class="page-num">1</a>
+
+    <% if (startPage > 2) { %>
+      <span class="dots">...</span>
+    <% } %>
+  <% } %>
+
+  <!-- Loop through page numbers -->
+  <% for (let i = startPage; i <= endPage; i++) { %>
+    <% if (i === currentPage) { %>
+      <span class="page-num active"><%= i %></span>
+    <% } else { %>
+      <a href="?page=<%= i %>" class="page-num"><%= i %></a>
+    <% } %>
+  <% } %>
+
+  <!-- If endPage < last page -->
+  <% if (endPage < totalPages) { %>
+
+    <% if (endPage < totalPages - 1) { %>
+      <span class="dots">...</span>
+    <% } %>
+
+    <a href="?page=<%= totalPages %>" class="page-num"><%= totalPages %></a>
+  <% } %>
+
+  <!-- Next Button -->
+  <a 
+    href="?page=<%= currentPage + 1 %>" 
+    class="page-btn <%= currentPage >= totalPages ? 'disabled' : '' %>"
+  >
+    Next
+  </a>
+
+</div>
+
+
+
+
+
+
     <%- include("./partials/footer") %>
 </body>
 
 </html>
+

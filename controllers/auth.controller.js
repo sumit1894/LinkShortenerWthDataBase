@@ -202,6 +202,7 @@ export const getEditProfilePage = async (req, res) => {
 
     return res.render("auth/edit-profile", {
         name: user.name,
+        avatarUrl:user.avatarUrl,
         errors: req.flash("errors"),
     })
 
@@ -225,7 +226,14 @@ export const postEditProfilePage = async (req, res) => {
         }
 
         // Update user with validated data
-        await updateUserByName({ userId: req.user.id, name: data.data.name });
+
+        const fileUrl = req.file ? `uploads/avatar/${req.file.filename}` : undefined;
+
+        await updateUserByName({ 
+            userId: req.user.id, 
+            name: data.name, 
+            avatarUrl:fileUrl
+        });
 
         // Success message
         req.flash("success", "Profile updated successfully!");
@@ -552,11 +560,11 @@ export const getGithubLoginCallback = async (req, res) => {
     if (!githubUserResponse.ok) return handleFailedLogin();
 
     const githubUser = await githubUserResponse.json();
-    console.log("githubUser",githubUser);
+    console.log("githubUser", githubUser);
 
-    const { id: githubUserId, name,avatar_url } = githubUser;
+    const { id: githubUserId, name, avatar_url } = githubUser;
 
-    
+
     const githubEmailResponse = await fetch(
         "https://api.github.com/user/emails",
         {
@@ -566,26 +574,26 @@ export const getGithubLoginCallback = async (req, res) => {
         }
     );
     if (!githubEmailResponse.ok) return handleFailedLogin();
-    
+
     const emails = await githubEmailResponse.json();
     const email = emails.filter((e) => e.primary)[0].email;
-    
+
     if (!email) return handleFailedLogin();
-    
-    
+
+
     //todo if user is already linked then we will get the user
     let user = await getUserWithOauthId({
         provider: "github",
         email,
     });
-    
-    
+
+
     //todo if user exists but user is not linked with oauth
     if (user && !user.providerAccountId) {
         await linkUserWithOauth({
             userId: user.id,
             provider: "github",
-            avatarUrl:avatar_url,
+            avatarUrl: avatar_url,
             providerAccountId: githubUserId,
         })
     }
@@ -594,7 +602,7 @@ export const getGithubLoginCallback = async (req, res) => {
 
     if (!user) {
         user = await createUserWithOauth({
-            name, email, provider: "github",avatarUrl:avatar_url, providerAccountId: githubUserId,
+            name, email, provider: "github", avatarUrl: avatar_url, providerAccountId: githubUserId,
         })
     }
 

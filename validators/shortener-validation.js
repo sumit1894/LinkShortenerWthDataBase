@@ -18,3 +18,14 @@ export const urlShortenerSchema = z.object({
         .min(2, { message: "Short code must be at least 2 characters" })
         .max(8, { message: "Short code must be no more than 8 characters" })
 });
+
+export const shortenerSearchParamsSchema = z.object({
+    page: z.coerce
+        .number()
+        .int()
+        .positive()
+        .min(1)
+        .optional()   // must be before default()
+        .default(1)
+        .catch(1),
+})

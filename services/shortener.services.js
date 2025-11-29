@@ -1,37 +1,48 @@
-import { eq } from "drizzle-orm";
+import { count, desc, eq } from "drizzle-orm";
 import { db } from "../config/db.js";
 import { shortLinksTable } from "../drizzle/schema.js";
 
 
-export const getAllShortLinks = async (userId) => {
-  return await db
-    .select()
-    .from(shortLinksTable)
-    .where(eq(shortLinksTable.userId, userId));
+export const getAllShortLinks = async ({userId, limit, offset}) => {
+    const condition = eq(shortLinksTable.userId, userId);
+    const shortLinks = await db
+        .select()
+        .from(shortLinksTable)
+        .where(condition)
+        .orderBy(desc(shortLinksTable.createdAt))
+        .limit(limit)
+        .offset(offset);
+
+    const [{ totalCount }] = await db
+        .select({ totalCount: count() })
+        .from(shortLinksTable)
+        .where(condition)
+
+    return {shortLinks,totalCount}
 };
 
-export const getShortLinkByShortCode=async(shortCode)=>{
-    const [result]= await db.select().from(shortLinksTable).where(eq(shortLinksTable.shortCode,shortCode))
+export const getShortLinkByShortCode = async (shortCode) => {
+    const [result] = await db.select().from(shortLinksTable).where(eq(shortLinksTable.shortCode, shortCode))
     return result;
 }
 
-export const insertShortLink=async({url,finalShortCode,userId})=>{
+export const insertShortLink = async ({ url, finalShortCode, userId }) => {
     await db.insert(shortLinksTable).values({
         url,
-        shortCode:finalShortCode,
+        shortCode: finalShortCode,
         userId
     })
 }
 
-export const findShortLinkById=async(id)=>{
-    const [result]= await db.select().from(shortLinksTable).where(eq(shortLinksTable.id,id))
+export const findShortLinkById = async (id) => {
+    const [result] = await db.select().from(shortLinksTable).where(eq(shortLinksTable.id, id))
     return result;
 }
 
-export const UpdateShortCode=async({id,url,shortCode})=>{
-    return await db.update(shortLinksTable).set({url,shortCode}).where(eq(shortLinksTable.id,id))
+export const UpdateShortCode = async ({ id, url, shortCode }) => {
+    return await db.update(shortLinksTable).set({ url, shortCode }).where(eq(shortLinksTable.id, id))
 }
 
-export const deleteShortCodeById=async(id)=>{
-    return await db.delete(shortLinksTable).where(eq(shortLinksTable.id,id))
+export const deleteShortCodeById = async (id) => {
+    return await db.delete(shortLinksTable).where(eq(shortLinksTable.id, id))
 }

@@ -316,8 +316,8 @@ export const sendNewVerifyEmailLink = async ({ userId, email }) => {
 }
 
 //! updateUserByName
-export const updateUserByName = async ({ userId, name }) => {
-    return await db.update(usersTable).set({ name }).where(eq(usersTable.id, userId));
+export const updateUserByName = async ({ userId, name,avatarUrl }) => {
+    return await db.update(usersTable).set({ name,avatarUrl }).where(eq(usersTable.id, userId));
 }
 
 //! updateUserPassword

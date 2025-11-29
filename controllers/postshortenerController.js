@@ -2,7 +2,7 @@
 import crypto from "crypto";
 import z from "zod"
 import { getAllShortLinks, getShortLinkByShortCode, insertShortLink, findShortLinkById, UpdateShortCode, deleteShortCodeById } from "../services/shortener.services.js";
-import { urlShortenerSchema } from "../validators/shortener-validation.js";
+import { shortenerSearchParamsSchema, urlShortenerSchema } from "../validators/shortener-validation.js";
 
 
 
@@ -17,9 +17,25 @@ export const errorPage = async (req, res) => {
 export const getSortenerPage = async (req, res) => {
     try {
         if (!req.user) return res.redirect("/login")
+        
+            const searchParams=shortenerSearchParamsSchema.parse(req.query);
+        // const links = await getAllShortLinks(req.user.id);
 
-        const links = await getAllShortLinks(req.user.id);
-        return res.render("index", { links, hosts: req.host, errors: req.flash("errors") });
+        const {shortLinks,totalCount}=await getAllShortLinks({
+            userId:req.user.id,
+            limit:10,
+            offset:(searchParams.page-1)*10,
+        })
+
+        const totalPages=Math.ceil(totalCount/10);
+
+
+        return res.render("index", { 
+            links:shortLinks,
+            hosts: req.host,
+            currentPage:searchParams.page,
+            totalPages:totalPages,
+            errors: req.flash("errors") });
 
     } catch (error) {
         console.log(error)
