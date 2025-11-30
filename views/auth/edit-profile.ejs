@@ -34,6 +34,9 @@
                             <% if (avatarUrl) { %>
                                 <img src="<%= avatarUrl %>" alt="Current profile picture" id="avatar-preview-img">
                                 <% } else { %>
+                                    <span>
+                                        <%= user.name.charAt(0).toUpperCase() %>
+                                    </span>
                                     <div class="avatar-placeholder" id="avatar-placeholder">
                                         <i class="fas fa-user"></i>
                                     </div>
@@ -133,7 +136,7 @@
                             placeholder.innerHTML = '<i class="fas fa-user"></i>';
                             document.querySelector('.avatar-preview').appendChild(placeholder);
                         }
-
+                        
                         // Show placeholder
                         placeholder.style.display = 'flex';
 
